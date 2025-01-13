@@ -1,0 +1,487 @@
+﻿@using Digitalization.Models.AdminModel
+@model List<EmployeeModel>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+
+
+<link rel="stylesheet" href="~/assets/css/admin/common.css" />
+
+<div class="mt-5">
+    <div class="mx-5 mt-5">
+        <br><br>
+        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+        <div class="main p-5">
+            <div class="bs-example row">
+                <nav aria-label="breadcrumb" class="pl-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index","Admin")" style="text-decoration: none">Admin</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">EmployeeSearchDetails</li>
+                    </ol>
+                </nav>
+                <h2 class="text-center">Employee Details</h2>
+                <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                <div class="col-10"></div>
+                <div class="col-2 mb-2">
+                    @if (ViewBag.IsPhotoAvailable != null && ViewBag.IsPhotoAvailable == true)
+                    {
+                        <img src="@ViewBag.UserImagePath" class="rounded float-end" height="120" style="margin-top: -40px" />
+                    }
+                    else
+                    {
+                        <img src="~/assets/images/PhotoUnavailable.jpg" class="rounded float-end" height="120" style="margin-top: -40px" />
+                    }
+                    <a href="@Url.Action("EditEmployeeData","Admin",new { StaffNumber = ViewBag.StaffNumber })" class="btn btn-primary mt-5">Edit Data</a>
+                    <a href="@Url.Action("EditCenterGroup","Admin",new { StaffNumber = ViewBag.StaffNumber })" class="btn btn-primary mt-2">Edit Center/Group</a>
+                </div>
+                <hr>
+                <form asp-action="EmployeePersonalData" method="post" class="m-2 pb-5" onsubmit="return validateForm()" name="register-form">
+                    <div class="tab-content">
+                        @if (Model.Count() > 0)
+                        {
+                            @for (var row = 0; row < Model.Count(); row++)
+                            {
+                                <h5 class="text-center">Personal Details</h5>
+                                <div class="row m-3 border rounded-top mt-4 p-3">
+                                    <div class="col-3 mb-3" style="display: none">
+                                        <label for="UserImagePath" class="form-label">Staff Number</label>
+                                        <input type="text" asp-for="@Model[row].UserImagePath" class="form-control" value="@ViewBag.UserImagePath" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="StaffNumber" class="form-label">Staff Number</label>
+                                        <input type="number" asp-for="@Model[row].StaffNumber" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="FirstName" class="form-label">First Name</label>
+                                        <input type="text" asp-for="@Model[row].FirstName" class="form-control" readonly>
+                                        <span id="validatefirstname" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="col-3 mb-3">
+                                        <label for="MiddleName" class="form-label">Middle Name</label>
+                                        <input type="text" asp-for="@Model[row].MiddleName" class="form-control" readonly>
+                                        <span id="validatemiddlename" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="LastName" class="form-label">Last Name</label>
+                                        <input type="text" asp-for="@Model[row].LastName" class="form-control" readonly>
+                                        <span id="validatelastname" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="PersonalEmailId" class="form-label">Personal Email Id</label>
+                                        <input type="email" asp-for="@Model[row].PersonalEmailId" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3" id="OfficialEmailidDiv">
+                                        <label for="OfficialEmailId" class="form-label">Official Email Id</label>
+                                        <input type="email" asp-for="@Model[row].OfficialEmailId" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="DateOfBirth" class="form-label">Date Of Birth</label>
+                                        <input type="date" asp-for="@Model[row].DateOfBirth" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="Gender" class="form-label">Gender</label>
+                                        <input type="text" asp-for="@Model[row].Gender" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="BloodGroup" class="form-label">Blood Group</label>
+                                        <input type="text" asp-for="@Model[row].BloodGroup" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="MobilePhoneNumber" class="form-label">Mobile Phone Number</label>
+                                        <input type="number" asp-for="@Model[row].MobilePhoneNumber" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="  col-3 mb-3">
+                                        <label for="DateOfJoining" class="form-label">Date Of Joining</label>
+                                        <input type="date" asp-for="@Model[row].DateOfJoining" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="col-3 mb-3">
+                                        <label for="DateOfRetirement" class="form-label" id="DORLabel">Date Of Retirement</label>
+                                        <input type="date" asp-for="@Model[row].DateOfRetirement" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="MaritalStatus" class="form-label">Marital Status</label>
+                                        <input type="text" asp-for="@Model[row].MaritalStatus" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="row m-3 border rounded-top mt-4 p-3">
+                                    <div class=" col-3 mb-3">
+                                        <label for="CentreId" class="form-label">Centre Name</label>
+                                        <input asp-for="@Model[row].CenterName" class="form-control" readonly />
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="GroupId" class="form-label">Group Name</label>
+                                        <input asp-for="@Model[row].GroupName" class="form-control" readonly />
+                                    </div>
+                                    <div class="col-3 mb-3" id="employeegroupdiv">
+                                        <label for="EmployeeGroup" class="form-label">Employee Group</label>
+                                        <input asp-for="@Model[row].EmployeeGroup" class="form-control" readonly />
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="Designation" class="form-label">Designation</label>
+                                        <input type="text" asp-for="@Model[row].Designation" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="TechNonTech" class="form-label">Type of Work</label>
+                                        <input type="text" asp-for="@Model[row].TechNonTech" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="CasteCategory" class="form-label readonly">Caste Category</label>
+                                        <input type="text" asp-for="@Model[row].CasteCategory" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="EmployeeCategory" class="form-label readonly">Employee Category</label>
+                                        <input type="text" asp-for="@Model[row].EmployeeCategory" id="EmployeeCategory" class="form-control" readonly>
+                                    </div>
+                                    @if (@Model[row].IsMinorities == 1)
+                                    {
+                                        <div class="col-3 mb-3">
+                                            <label for="Minority" class="form-label readonly">Minority</label>
+                                            <input type="text" asp-for="@Model[row].Minorities" class="form-control" readonly>
+                                        </div>
+                                    }
+                                    @if (@Model[row].IsPhysicallyHandicapped == 1)
+                                    {
+                                        <div class="col-3 mb-3">
+                                            <label for="Disabilities" class="form-label readonly">Disabilities</label>
+                                            <input type="text" asp-for="@Model[row].PhysicallyHandicapped" class="form-control" readonly>
+                                        </div>
+                                    }
+                                    @if (@Model[row].IsExServiceMen == 1)
+                                    {
+                                        <div class="col-3 mb-3">
+                                            <label for="IsExServiceMen" class="form-label readonly">Ex-Servicemen</label>
+                                            <input type="text" value="Yes" class="form-control" readonly>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-3 mb-3">
+                                            <label for="IsExServiceMen" class="form-label readonly">Ex-Servicemen</label>
+                                            <input type="text" value="No" class="form-control" readonly>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="row m-3 border rounded-top mt-4 p-3">
+                                    <div class="col-3 mb-3" id="entryleveldiv">
+                                        <label for="EntryLevel" class="form-label">Entry Level</label>
+                                        <input type="text" asp-for="@Model[row].EntryLevel" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="col-3 mb-3" id="currentbasicpaydiv">
+                                        <label for="CurrentBasicPay" class="form-label">Current BasicPay</label>
+                                        <input type="number" asp-for="@Model[row].CurrentBasicPay" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="PayMatrix" id="PayMatrixLabel" class="form-label">Pay Matrix</label>
+                                        <input type="number" asp-for="@Model[row].PayMatrix" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="PAN" class="form-label">PAN</label>
+                                        <input type="text" asp-for="@Model[row].PAN" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="AdharNumber" class="form-label">Aadhar Number</label>
+                                        <input type="text" asp-for="@Model[row].AadharNumber" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="AccountNumber" class="form-label">Bank Account Number</label>
+                                        <input type="text" asp-for="@Model[row].AccountNumber" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-3 mb-3" id="SpouseInGovtDiv">
+                                        <label for="SpouseInGovernment" class="form-label">Spouse In Government Service</label>
+                                        <input class="form-control" id="SpouseInGovernment" asp-for="@Model[row].SpouseInGovernment" readonly />
+                                    </div>
+                                    @if (Model[row].EmployeeCategory == "Contract Employee")
+                                    {
+                                        @if (Model[row].IsHRAApplicable == 1)
+                                        {
+                                            <div class="col-3 mb-3" id="HRADiv">
+                                                <label for="IsHRAApplicable" class="form-label">HRA Applicable</label>
+                                                <input type="text" value="Yes" class="form-control" readonly>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-3 mb-3" id="HRADiv">
+                                                <label for="IsHRAApplicable" class="form-label">HRA Applicable</label>
+                                                <input type="text" value="No" class="form-control" readonly>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                                <div class="row m-3 border rounded-top mt-4 p-3">
+                                    <div class="col-6 mb-3">
+                                        <label for="PresentAddress" class="form-label">Present Address</label>
+                                        <textarea asp-for="@Model[row].PresentAddress" class="form-control" readonly></textarea>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="PermanentAddress" class="form-label">Permanent Address</label>
+                                        <textarea asp-for="@Model[row].PermanentAddress" class="form-control" readonly></textarea>
+                                    </div>
+                                    <div class="col-3 mb-3" style="display: none">
+                                        <input class="form-control" asp-for="@Model[row].IsPhotoAvailable" readonly hidden />
+                                    </div>
+                                </div>
+
+                                @if (Model[row].QualificationModel.Count() > 0)
+                                {
+                                    <h4 class="text-center">Qualification Details</h4>
+                                    <div class="row m-3 border rounded-top mt-4 p-3">
+                                        @{
+                                            int i = 1;
+                                        }
+                                        @for (var qualificationrow = 0; qualificationrow < Model[row].QualificationModel.Count(); qualificationrow++)
+                                        {
+                                            <div class="row m-3 p-0">
+                                                <div class="col-3 mb-3">
+                                                    @if(i==1)
+                                                    {
+                                                        <label for="Qualification1" class="form-label">Type of Qualification</label>
+                                                    }
+                                                    <input type="text" asp-for="@Model[row].QualificationModel[qualificationrow].Qualification1" class="form-control" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    @if(i==1)
+                                                    {
+                                                        <label for="Qualification2" class="form-label">Qualification</label>
+                                                    }
+                                                    <input type="text" asp-for="@Model[row].QualificationModel[qualificationrow].Qualification2" class="form-control" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    @if(i==1)
+                                                    {
+                                                        <label for="Specialization" class="form-label">Specialization</label>
+                                                    }
+                                                    <input type="text" asp-for="@Model[row].QualificationModel[qualificationrow].Specialization" class="form-control" readonly />
+                                                </div>
+                                            </div>
+                                            i++;
+                                        }
+                                    </div>
+                                }
+                    <div id="emergencyfamilymedical">
+                        @if (Model[row].EmergencyContactModel.Count() > 0)
+                        {
+                            <h5 class="text-center">Emergency Contact Details</h5>
+                            <div class="row m-3 border rounded-top mt-4 p-3">
+                                @{
+                                    int i=1;
+                                }
+                                @for (var emergencyrow = 0; emergencyrow < Model[row].EmergencyContactModel.Count(); emergencyrow++)
+                                {
+                                    <div>
+                                        <div class="row m-3">
+                                            <div class="col-3 mb-3">
+                                                @if(i==1)
+                                                {
+                                                    <label for="ContactName" class="form-label">Contact Name</label>
+                                                }
+                                                <input type="text" asp-for="@Model[row].EmergencyContactModel[emergencyrow].ContactName" class="form-control" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                @if(i==1)
+                                                {
+                                                    <label for="LandlineNumber" class="form-label">Landline Number</label>
+                                                }
+                                                <input type="number" asp-for="@Model[row].EmergencyContactModel[emergencyrow].LandlineNumber" class="form-control" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                @if(i==1)
+                                                {
+                                                    <label for="MobilePhoneNumber" class="form-label">Mobile Phone Number</label>
+                                                }
+                                                <input type="number" asp-for="@Model[row].EmergencyContactModel[emergencyrow].MobilePhoneNumber" class="form-control" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                @if(i==1)
+                                                {
+                                                    <label for="EmailId" class="form-label">Email Id</label>
+                                                }
+                                                <input type="email" asp-for="@Model[row].EmergencyContactModel[emergencyrow].EmailId" class="form-control" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                @if(i==1)
+                                                {
+                                                    <label for="Relation" class="form-label">Relation</label>
+                                                }
+                                                <input type="text" asp-for="@Model[row].EmergencyContactModel[emergencyrow].Relation" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    i++;
+                                }
+                            </div>
+                        }
+
+                        @if (Model[row].FamilyDeclarationModel.Count() > 0)
+                        {
+                            <h5 class="text-center">Family Declaration Details</h5>
+                            <div class="row m-3 border rounded-top mt-4 p-3">
+                                @{
+                                    int i=1;
+                                }
+                                @for (var familyrow = 0; familyrow < Model[row].FamilyDeclarationModel.Count(); familyrow++)
+                                {
+                                    <div class="row m-3">
+                                        <div class="col-3 mb-3" style="display: none">
+                                            @if(i==1)
+                                            {
+                                                <label for="DependentID" class="form-label">Dependent ID</label>
+                                            }
+                                            <input type="number" asp-for="@Model[row].FamilyDeclarationModel[familyrow].DependentID" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-3 mb-3" style="display: none">
+                                            @if(i==1)
+                                            {
+                                                <label for="IsDependent" class="form-label">IsDependent</label>
+                                            }
+                                            <input type="number" asp-for="@Model[row].FamilyDeclarationModel[familyrow].IsDependent" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-3 mb-3" style="display: none">
+                                            @if(i==1)
+                                            {
+                                                <label for="StaffNumber" class="form-label">Staff Number</label>
+                                            }
+                                            <input type="number" asp-for="@Model[row].FamilyDeclarationModel[familyrow].StaffNumber" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-3 mb-3">
+                                            @if(i==1)
+                                            {
+                                                <label for="RelativeName" class="form-label">Relative Name</label>
+                                            }
+                                            <input type="text" asp-for="@Model[row].FamilyDeclarationModel[familyrow].RelativeName" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-3 mb-3">
+                                            @if(i==1)
+                                            {
+                                                <label for="Relation" class="form-label">Relation</label>
+                                            }
+                                            <input type="text" asp-for="@Model[row].FamilyDeclarationModel[familyrow].Relation" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-3 mb-3">
+                                            @if(i==1)
+                                            {
+                                                <label for="DateOfBirth" class="form-label">Date Of Birth</label>
+                                            }
+                                            <input type="date" asp-for="@Model[row].FamilyDeclarationModel[familyrow].DateOfBirth" class="form-control" readonly>
+                                        </div>
+                                        @if(@Model[row].FamilyDeclarationModel[familyrow].IsDependent == 1)
+                                        {
+                                            <div class="col-3 mb-3">
+                                                @if(i==1)
+                                                {
+                                                    <label for="IsDependent" class="form-label">Category</label>
+                                                }
+                                                <input type="text" value="Dependent" class="form-control" readonly>
+                                            </div>
+                                        }
+                                        else
+                                        { 
+                                            <div class="col-3 mb-3">
+                                                @if(i==1)
+                                                {
+                                                    <label for="IsDependent" class="form-label">Category</label>
+                                                }
+                                                <input type="text" value="Non Dependent" class="form-control" readonly>
+                                            </div>
+                                        }
+                                    </div>
+                                    i++;
+                                }
+                            </div>
+                        }
+
+                        @if (Model[row].MedicalDependentsModel.Count() > 0)
+                        {
+                            <h5 class="text-center">Medical Dependents Details</h5>
+                            <div class="row m-3 border rounded-top mt-4 p-3">
+                                @{
+                                    int i=1;
+                                }
+                                @for (var medicalrow = 0; medicalrow < Model[row].MedicalDependentsModel.Count(); medicalrow++)
+                                {
+                                    <div class="row m-3">
+                                        <div class="col-3 mb-3" style="display: none">
+                                            <label for="DependentID" class="form-label">Dependent ID</label>
+                                            <input type="number" asp-for="@Model[row].MedicalDependentsModel[medicalrow].DependentID" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-3 mb-3" style="display: none">
+                                            <label for="StaffNumber" class="form-label">Staff Number</label>
+                                            <input type="number" asp-for="@Model[row].MedicalDependentsModel[medicalrow].StaffNumber" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-3 mb-3">
+                                            @if(i==1)
+                                            {
+                                                <label for="RelativeName" class="form-label">Relative Name</label>
+                                            }
+                                            <input type="text" asp-for="@Model[row].MedicalDependentsModel[medicalrow].DependentName" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-3 mb-3">
+                                            @if(i==1)
+                                            {
+                                                <label for="Relation" class="form-label">Relation</label>
+                                            }
+                                            <input type="text" asp-for="@Model[row].MedicalDependentsModel[medicalrow].Relation" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-3 mb-3">
+                                            @if(i==1)
+                                            {
+                                                <label for="DateOfBirth" class="form-label">Date Of Birth</label>
+                                            }
+                                            <input type="date" asp-for="@Model[row].MedicalDependentsModel[medicalrow].DateOfBirth" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    i++;
+                                }
+                            </div>
+
+                        }
+                        @if (Model[row].GratuityModel.Count() > 0)
+                        {
+                            <h4 class="text-center">Gratuity Details</h4>
+                            <div class="row m-3 border rounded-top mt-4 p-3">
+                                @{
+                                    int i=1;
+                                }
+                                @for (var gratuityrow = 0; gratuityrow < Model[row].GratuityModel.Count(); gratuityrow++)
+                                {
+                                    <div class="row m-3 p-0">
+                                        <div class="col-3 mb-3" style="display: none">
+                                            <label for="NomineeID" class="form-label">Nominee ID</label>
+                                            <input type="number" asp-for="@Model[row].GratuityModel[gratuityrow].NomineeID" class="form-control">
+                                        </div>
+                                        <div class="col-3 mb-3">
+                                            @if(i==1)
+                                            {
+                                                <label for="RelativeName" class="form-label">Relative Name</label>
+                                            }
+                                            <input type="text" asp-for="@Model[row].GratuityModel[gratuityrow].NomineeName" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-3 mb-3">
+                                            @if(i==1)
+                                            {
+                                                <label for="Relation" class="form-label">Relation</label>
+                                            }
+                                            <input type="number" asp-for="@Model[row].GratuityModel[gratuityrow].Percentage" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    i++;
+                                }
+                            </div>
+                        }
+                    </div>
+                                <a class="btn btn-primary  px-5 mt-2 ml-4" href="@Url.Action("EmployeeSearch","Admin")">Go Back</a>
+                            }
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/admin/employee-search-details.js"></script>

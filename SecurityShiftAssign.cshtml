@@ -1,0 +1,187 @@
+﻿@using Digitalization.Models.CommonModel
+@model List<SecurityModel>
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<link rel="stylesheet" href="~/assets/css/admin/common.css" />
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<!-- #region datatables files -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<!-- #endregion -->
+
+<!-- #region datatables files -->
+<link rel="stylesheet" type="text/css" href="./assets/DataTables-1.11.5/css/dataTables.dataTables.min.css" />
+<script src="./assets/DataTables-1.11.5/js/jquery.dataTables.min.js"></script>
+<!-- #endregion -->
+
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <div class="bs-example">
+                            <nav aria-label="breadcrumb" class="pl-3">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">Admin</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">SecurityShiftAssign</li>
+                                </ol>
+                            </nav>
+                            <div class="row">
+                                <div class="col-3">
+
+                                    <!-- @*<h5 class="ml-5 mt-2 text-success">@ViewBag.SuccessMessage</h5>*@ -->
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="text-center">Security Shift Assign</h2>
+                                    <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                                    <h5 class="text-center text-danger">@ViewBag.ExceptionError</h5>
+                                    <h5 id="ErrorMessage" class="text-center text-danger">@ViewBag.Error</h5>
+                                    @*<h5 class="text-center text-success">@ViewBag.SuccessMessage</h5>*@
+                                </div>
+                               <div class="col-2">
+                                    <a class="btn btn-primary" href="@Url.Action("PrintSecurityShiftDetails","Admin")">Print Security Shift</a>
+                                </div>
+                                <div class="col-2">
+                                    <a class="btn btn-primary" href="@Url.Action("SecurityShift","Admin")">Edit Shift Details</a>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <span id="SecurityCount" style="display: none">@Model.Count()</span>
+
+                            <div>
+                                
+                                    <div class="tab-content">
+                                        <div class="SecurityTab" id="security">
+                                            <div class="row m-1 rounded-top mt-4 p-3">
+                                                <table class="table-bordered text-center">
+                                                    <tr class="py-3">
+                                                        <th class="text-primary">Type of Shift</th>
+                                                        <th class="text-primary">Short Form</th>
+                                                        <th class="text-primary">Working hours</th>
+                                                    </tr>
+                                                    @for (var row = 0; row < Model.Count(); row++)
+                                                    {
+                                                        foreach(var drivershift in Model[row].SecurityShift)
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    @if(@drivershift.ShiftType == "SH1")
+                                                                    {
+                                                                        <p>Shift 1</p>
+                                                                    }
+                                                                    else if(@drivershift.ShiftType == "GSH")
+                                                                    {
+                                                                        <p>General Shift</p>
+                                                                    }
+                                                                    else if(@drivershift.ShiftType == "SH2")
+                                                                    {
+                                                                        <p>Shift 2</p>
+                                                                    }
+                                                                    else if(@drivershift.ShiftType == "SH3")
+                                                                    {
+                                                                        <p>Shift 3</p>
+                                                                    }
+                                                                </td>
+                                                                <td>@drivershift.ShiftType</td>
+                                                                <td>@drivershift.WorkingHours</td>
+                                                            </tr>
+                                                        }
+                                                        break;
+                                                    }
+                                                </table>
+                                            </div>
+                                            <div class="border rounded-top p-3 mx-3">                                                
+                                                <div id="FirstDiv">
+                                                    <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="SecurityShiftAssign" class="m-4 pb-5" id="second-form">
+                                                        <div class="text-center">
+                                                            <table class="table-bordered text-center">
+                                                                <thead class="p-2">
+                                                                    <tr>
+                                                                        <th class="text-primary p-3"><span>Date</span></th>
+                                                                        <th class="text-primary p-3"><span>Shift 1</span></th>
+                                                                        <th class="text-primary p-3"><span>General Shift</span></th>
+                                                                        <th class="text-primary p-3"><span>Shift 2</span></th>
+                                                                        <th class="text-primary p-3"><span>Shift 3</span></th>
+                                                                        <th class="text-primary p-3"><span>Weekly Off</span></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="py-3">
+
+                                                                    @for (var row = 0; row < 7; row++)
+                                                                    {
+                                                                        <tr>
+                                                                            <td class="p-3" style="display: none">
+                                                                                <input type="text" class="form-control" asp-for="@Model[row].FromDate" id="AlternateFromDate(@row)"/>
+                                                                            </td>
+                                                                            <td class="p-3" width="120px">
+                                                                                <input type="date" class="form-control" id="FromDate(@row)" onclick="toggledate(@row)" onchange="toggledate(@row)"/>
+                                                                                <span class="text-danger" id="validatedate(@row)"></span>
+                                                                            </td>
+                                                                            <td class="p-3">
+                                                                                <select class="form-control" id="Shift1(@row)" asp-for="@Model[row].Shift1AssignedEmployee" asp-items="@(new SelectList(Model[0].SecurityEmployees,"StaffNumber","Name"))" onclick="clearshift1validation(@row)" onchange="clearshift1validation(@row)">
+                                                                                    <option value="Null">Please Select Employee</option>
+                                                                                </select>
+                                                                                <span class="text-danger" id="validateshift1(@row)"></span>
+                                                                            </td>
+                                                                            <td class="p-3">
+                                                                                <select class="form-control" id="GeneralShift(@row)" asp-for="@Model[row].GeneralShiftAssignedEmployee" asp-items="@(new SelectList(Model[0].SecurityEmployees,"StaffNumber","Name"))" onclick="cleargeneralshiftvalidation(@row)" onchange="cleargeneralshiftvalidation(@row)">
+                                                                                    <option value="Null">Please Select Employee</option>
+                                                                                </select>
+                                                                                <span class="text-danger" id="validategeneralshift(@row)"></span>
+                                                                            </td>
+                                                                            <td class="p-3"> 
+                                                                                <select class="form-control" id="Shift2(@row)" asp-for="@Model[row].Shift2AssignedEmployee" asp-items="@(new SelectList(Model[0].SecurityEmployees,"StaffNumber","Name"))" onclick="clearshift2validation(@row)" onchange="clearshift2validation(@row)">
+                                                                                    <option value="Null">Please Select Employee</option>
+                                                                                </select>
+                                                                                <span class="text-danger" id="validateshift2(@row)"></span>
+                                                                            </td>
+                                                                            <td class="p-3">
+                                                                                <select class="form-control" id="Shift3(@row)" asp-for="@Model[row].Shift3AssignedEmployee" asp-items="@(new SelectList(Model[0].SecurityEmployees,"StaffNumber","Name"))" onclick="clearshift3validation(@row)" onchange="clearshift3validation(@row)">
+                                                                                    <option value="Null">Please Select Employee</option>
+                                                                                </select>
+                                                                                <span class="text-danger" id="validateshift3(@row)"></span>
+                                                                            </td>
+                                                                            <td class="p-3">
+                                                                                <select class="form-control" id="WeeklyOff(@row)" asp-for="@Model[row].WeeklyOffAssignedEmployee" asp-items="@(new SelectList(Model[0].SecurityEmployees,"StaffNumber","Name"))" onclick="clearweeklyoffvalidation(@row)" onchange="clearweeklyoffvalidation(@row)">
+                                                                                    <option value="Null">Please Select Employee</option>
+                                                                                </select>
+                                                                                <span class="text-danger" id="validateweeklyoff(@row)"></span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary px-5 mt-2 float-end">Submit</button>
+                                                        <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("Home","User")">Go Back</a>
+                                                    </form>
+                                                </div>                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/admin/security-shift-assign.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DataTable').DataTable();
+    });
+</script>

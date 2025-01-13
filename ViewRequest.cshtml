@@ -1,0 +1,80 @@
+﻿
+<link rel="stylesheet" href="~/assets/css/authority/common.css" />
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+
+<div class="ml-5 ms-5">
+    <div class="ml-5 ms-5">
+        <div class="mt-5 ml-3 ms-5">
+            <div class="ms-5">
+                <div class="mx-1 mt-5 ms-5">
+                    <br><br>
+                    <div class="main m-2 py-3 px-4 ml-5">
+                        <div class="bs-example">
+                            <nav aria-label="breadcrumb" class="pl-3">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Admin")" style="text-decoration: none">Admin</a></li>
+                                    <li class="breadcrumb-item"><a href="@Url.Action("EmployeeRequest","Admin")" style="text-decoration: none">EmployeeRequest</a></li>
+                                </ol>
+                            </nav>
+                            <div class="row">
+                                <div class="col-3">
+                                    <!-- @*<h5 class="ml-5 mt-2 text-success">@ViewBag.SuccessMessage</h5>*@ -->
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="text-center">Employee Requests</h2>
+                                     <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                                    <h5 class="text-center text-danger">@ViewBag.ExceptionError</h5>
+                                    <h5 id="ErrorMessage" class="text-center text-danger">@ViewBag.Error</h5>
+                                    <h5 class="text-center text-success">@ViewBag.SuccessMessage</h5> 
+                                </div>
+                                <div class="col-2"></div>
+                                <div class="col-2">
+
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="tab-content">
+                                <div class="" id="userdetails">
+                                    <table class="table table-bordered text-center" id="DataTable">
+                                        <thead class="p-3">
+                                            <tr>
+                                                <th scope="col">Sl. No.</th>
+                                                <th scope="col">Indent ID</th>
+                                                <th scope="col">Staff Number</th>
+                                                <th scope="col">First Name</th>
+                                                <th scope="col">Designation</th>
+                                                <th scope="col">Group Name</th>
+                                                <th scope="col">Center Name</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td> sample</td>
+                                                <td scope="row">sample</td>
+                                                <td> sample</td>
+                                                <td> sample</td>
+                                                <td> sample</td>
+                                                <td> sample</td>
+                                                <td> sample</td>
+                                                <td>
+                                                    <a href="@Url.Action("EmployeeRequestData","Admin")" class="btn btn-primary">View</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

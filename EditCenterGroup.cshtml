@@ -1,0 +1,236 @@
+﻿@using Digitalization.Models.AdminModel
+@model EmployeeModel
+
+
+<link rel="stylesheet" href="~/assets/css/admin/common.css" />
+
+<div class="mt-5">
+    <div class="mx-5 mt-5">
+        <br><br>
+        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+        <div class="main p-5">
+            <div class="bs-example row">
+                <nav aria-label="breadcrumb" class="pl-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index","Admin")" style="text-decoration: none">Admin</a></li>
+                        <li class="breadcrumb-item"><a href="@Url.Action("EmployeeSearch","Admin")" style="text-decoration: none">EmployeeSearch</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">EditEmployeeData</li>
+                    </ol>
+                </nav>
+                <h2 class="text-center">Center & Group Details</h2>
+                <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                <div class="col-10"></div>
+                <div class="col-2 mb-2">
+                    @if (ViewBag.IsPhotoAvailable != null && ViewBag.IsPhotoAvailable == true)
+                    {
+                        @*<img src="~/assets/UserImages/@(ViewBag.StaffNumber).jpg" class="rounded float-end" height="120" style="margin-top: -40px" />*@
+                        <img src="@ViewBag.UserImagePath" class="rounded float-end" height="120" style="margin-top: -40px" />
+                    }
+                    else
+                    {
+                        <img src="~/assets/images/PhotoUnavailable.jpg" class="rounded float-end" height="120" style="margin-top: -40px" />
+                    }
+                </div>
+                <hr>
+                <form novalidate enctype="multipart/form-data" asp-action="EditCenterGroup" method="post" class="m-2 pb-5" name="register-form">
+                    <div class="tab-content">
+                        <div class="" id="userdetails">
+                            <div class="row">
+                                <div class="row m-3 border rounded-top mt-4 pt-2">
+                                    <div class="col-3 mb-3">
+                                        <label for="Center" class="form-label">Center</label>
+                                        <select asp-for="CenterID" class="form-control" id="CenterID" asp-items="@(new SelectList(@Model.Centers,"CenterId","CenterName"))" onchange="toggleFetchButton()">
+                                            <option value="0">Please Select Your Center</option>
+                                        </select>
+                                        <span id="validatecenter" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-2 mb-3 row mt-2 mr-3" id="ButtonDiv" style="display: none">
+                                        <div>
+                                            <button type="submit" class="btn btn-primary px-5 my-3 submit-btn form-control text-center fetch-group-button" onclick="return validatecenter()" id="FetchGroupButton">Fetch Groups</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 mb-3 ml-4">
+                                        <label for="Group" class="form-label">Group</label>
+                                        <select asp-for="GroupID" class="form-control" id="GroupID" asp-items="@(new SelectList(@Model.Groups,"GroupId","GroupName"))">
+                                            <option value="-1">Please Select Your Group</option>
+                                        </select>
+                                        <span id="validategroup" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row m-3 border rounded-top mt-4 pt-2" style="display: none">                                            
+                                    <div class="col-3 mb-3" style="display: none">
+                                        <label for="CenterID" class="form-label bo">Center ID</label>
+                                        <input type="number" asp-for="CenterID" class="form-control" id="CenterID">
+                                    </div>
+                                    <div class="col-3 mb-3" style="display: none">
+                                        <label for="GroupID" class="form-label bo">Group ID</label>
+                                        <input type="number" asp-for="GroupID" class="form-control" id="GroupID">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="StaffNumber" class="form-label bo">Staff Number</label>
+                                        <input type="number" onwheel="this.blur()" asp-for="StaffNumber" class="form-control" id="StaffNumber" onkeypress="clearstaffnumbervalidation()" onclick="clearstaffnumbervalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="FirstName" class="form-label">First Name</label>
+                                        <input type="text" asp-for="FirstName" class="form-control" id="FirstName" onkeypress="clearfirstnamevalidation()" onclick="clearfirstnamevalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="MiddleName" class="form-label">Middle Name</label>
+                                        <input type="text" asp-for="MiddleName" class="form-control" id="MiddleName" onkeypress="clearmiddlenamevalidation()" onclick="clearmiddlenamevalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="LastName" class="form-label">Last Name</label>
+                                        <input type="text" asp-for="LastName" class="form-control" id="LastName" onkeypress="clearlastnamevalidation()" onclick="clearlastnamevalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="PersonalEmailId" class="form-label">Personal Email Id</label>
+                                        <input type="email" asp-for="PersonalEmailId" class="form-control" id="PersonalEmailId" onkeypress="clearpersonalemilaidvalidation()" onclick="clearpersonalemilaidvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3" id="OfficialEmailidDiv">
+                                        <label for="OfficialEmailId" class="form-label">Official Email Id</label>
+                                        <input type="email" asp-for="OfficialEmailId" class="form-control" id="OfficialEmailId" onkeypress="clearofficialemailidvalidation()" onclick="clearofficialemailidvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="DateOfBirth" class="form-label">Date Of Birth</label>
+                                        <input type="date" asp-for="DateOfBirth" class="form-control" id="DateOfBirth" onclick="cleardateofbirthvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="Gender" class="form-label">Gender</label>
+                                        <input type="text" asp-for="Gender" class="form-control" id="Gender" onclick="cleardateofbirthvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="BloodGroup" class="form-label">BloodGroup</label>
+                                        <input type="text" asp-for="BloodGroup" class="form-control" id="BloodGroup" onclick="cleardateofbirthvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="MobilePhoneNumber" class="form-label">Mobile Phone Number</label>
+                                        <input type="number" onwheel="this.blur()" asp-for="MobilePhoneNumber" class="form-control" id="MobilePhoneNumber" onkeypress="clearmobilenumbervalidation()" onclick="clearmobilenumbervalidation()">
+                                    </div>
+                                    <div class="  col-3 mb-3">
+                                        <label for="DateOfJoining" class="form-label">Date Of Joining</label>
+                                        <input type="date" asp-for="DateOfJoining" class="form-control" id="DateOfJoining" onclick="cleardateofjoiningvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="DateOfRetirement" id="DateOfRetirementLabel" class="form-label">Date Of Retirement</label>
+                                        <input type="date" asp-for="DateOfRetirement" class="form-control" id="DateOfRetirement" onclick="cleardateofretirementvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3" id="MaritalStatusDiv">
+                                        <label for="MaritalStatus" id="MaritalStatus" class="form-label">MaritalStatus</label>
+                                        <input type="text" asp-for="MaritalStatus" class="form-control" id="MaritalStatus" onclick="cleardateofretirementvalidation()">
+                                    </div>
+                                </div>
+                                <div class="row m-3 border rounded-top mt-4 pt-2" style="display: none">
+                                    <div class="col-3 mb-3" id="EmployeeGroupDiv">
+                                        <label for="EmployeeGroup" id="EmployeeGroup" class="form-label">EmployeeGroup</label>
+                                        <input type="text" asp-for="EmployeeGroup" class="form-control" id="EmployeeGroup" onclick="cleardateofretirementvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="Designation" id="Designation" class="form-label">Designation</label>
+                                        <input type="text" asp-for="Designation" class="form-control" id="Designation" onclick="cleardateofretirementvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="TechNonTech" class="form-label">TechNonTech</label>
+                                        <input type="text" asp-for="TechNonTech" class="form-control" id="TechNonTech" onclick="cleardateofretirementvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="CasteCategory" class="form-label">CasteCategory</label>
+                                        <input type="text" asp-for="CasteCategory" class="form-control" id="CasteCategory" onclick="cleardateofretirementvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="IsMinorities" class="form-label">IsMinorities</label>
+                                        <input type="text" asp-for="IsMinorities" class="form-control" id="IsMinorities" onclick="cleardateofretirementvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="Minorities" class="form-label">Minorities</label>
+                                        <input type="text" asp-for="MinorityID" class="form-control" id="Minorities" onclick="cleardateofretirementvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="IsPhysicallyHandicapped" class="form-label">IsPhysicallyHandicapped</label>
+                                        <input type="text" asp-for="IsPhysicallyHandicapped" class="form-control" id="IsPhysicallyHandicapped" onclick="cleardateofretirementvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="PhysicallyHandicapped" class="form-label">PhysicallyHandicapped</label>
+                                        <input type="text" asp-for="PhysicallyHandicappedID" class="form-control" id="PhysicallyHandicapped" onclick="cleardateofretirementvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="IsExServiceMen" class="form-label">IsExServiceMen</label>
+                                        <input type="text" asp-for="IsExServiceMen" class="form-control" id="IsExServiceMen" onclick="cleardateofretirementvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="EmployeeCategory" class="form-label">Employee Category</label>
+                                        <input type="text" asp-for="EmployeeCategory" class="form-control" id="EmployeeCategory" readonly>
+                                    </div>
+                                </div>
+                                <div class="row m-3 border rounded-top mt-4 pt-2" style="display: none">
+                                    <div class="col-3 mb-3" id="EntryLevelDiv">
+                                        <label for="EntryLevel" class="form-label">Entry Level</label>
+                                        <input type="text" asp-for="EntryLevel" class="form-control" id="EntryLevel" onkeypress="clearentrylevelvalidation()" onclick="clearentrylevelvalidation()">
+                                    </div>
+
+                                    <div class="col-3 mb-3" id="CurrentBasicPayDiv">
+                                        <label for="CurrentBasicPay" class="form-label">Current BasicPay</label>
+                                        <input type="number" onwheel="this.blur()" asp-for="CurrentBasicPay" class="form-control" id="CurrentBasicPay" onkeypress="clearcurrentbasicpayvalidation()" onclick="clearcurrentbasicpayvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="PayMatrix" id="PayMatrixLabel" class="form-label">Pay Matrix</label>
+                                        <input type="number" onwheel="this.blur()" asp-for="PayMatrix" class="form-control" id="PayMatrix" onkeypress="clearpaymatrixvalidation()" onclick="clearpaymatrixvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="PAN" class="form-label">PAN</label>
+                                        <input type="text" asp-for="PAN" class="form-control" id="PAN" onkeypress="clearpanvalidation()" onclick="clearpanvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="AdharNumber" class="form-label">Aadhar Number</label>
+                                        <input type="text" asp-for="AadharNumber" class="form-control" id="AadharNumber" onkeypress="clearaadharvalidation()" onclick="clearaadharvalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="AccountNumber" class="form-label">Bank Account Number</label>
+                                        <input type="text" asp-for="AccountNumber" class="form-control" id="AccountNumber" onkeypress="clearaccountnumbervalidation()" onclick="clearaccountnumbervalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="SpouseInGovernment" class="form-label">SpouseInGovernment</label>
+                                        <input type="text" asp-for="SpouseInGovernment" class="form-control" id="SpouseInGovernment" onkeypress="clearaccountnumbervalidation()" onclick="clearaccountnumbervalidation()">
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <label for="IsHRAApplicable" class="form-label">IsHRAApplicable</label>
+                                        <input type="text" asp-for="IsHRAApplicable" class="form-control" id="IsHRAApplicable" onkeypress="clearaccountnumbervalidation()" onclick="clearaccountnumbervalidation()">
+                                    </div>
+                                </div>
+                                <div class="m-3 border rounded-top mt-4 p-0 pt-2" style="display: none">
+                                    <div class="row m-3 p-0">
+                                        <div class="col-6 mb-3">
+                                            <label for="PresentAddress" class="form-label">Present Address</label>
+                                            <textarea asp-for="PresentAddress" class="form-control" id="PresentAddress" onkeypress="presentaddresslengthcheck(this)" onclick="clearpresentaddressvalidation()"></textarea>
+                                            <span id="presentaddresscharacters" class="text-danger"></span>
+                                            <span id="validatepresentaddress" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <label for="PermanentAddress" class="form-label">Permanent Address</label>
+                                            <textarea asp-for="PermanentAddress" class="form-control" id="PermanentAddress" onkeypress="permanentaddresslengthcheck(this)" onclick="clearpermanentaddressvalidation()"></textarea>
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="PermanentAddressCheck" onclick="ChangePermanentAddress()">
+                                                <label class="form-check-label" for="PermanentAddressCheck">Same as Present Address</label>
+                                            </div>
+                                            <span id="permanentaddresscharacters" class="text-danger"></span>
+                                            <span id="validatepermanentaddress" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-3 mb-3" style="display: none">
+                                            <input class="form-control" asp-for="IsPhotoAvailable" readonly hidden />
+                                        </div>
+                                        <div class="col-3 mb-3" style="display: none">
+                                            <input class="form-control" asp-for="UserImagePath" readonly hidden />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary px-5 mt-2" onclick="return validateForm()">Submit</button>
+                        <a class="btn btn-primary  px-5 mt-2 ml-4" href="@Url.Action("EmployeeSearch","Admin")">Go Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/admin/edit-center-group.js"></script>

@@ -1,0 +1,148 @@
+﻿@using Digitalization.Models.CommonModel
+@model List<SecurityModel>
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<link rel="stylesheet" href="~/assets/css/admin/common.css" />
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<!-- #region datatables files -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<!-- #endregion -->
+
+<!-- #region datatables files -->
+<link rel="stylesheet" type="text/css" href="./assets/DataTables-1.11.5/css/dataTables.dataTables.min.css" />
+<script src="./assets/DataTables-1.11.5/js/jquery.dataTables.min.js"></script>
+<!-- #endregion -->
+
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <div class="bs-example">
+                            <nav aria-label="breadcrumb" class="pl-3">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">Admin</a></li>
+                                    <li class="breadcrumb-item"><a href="@Url.Action("SecurityShiftAssign","Admin")" style="text-decoration: none">SecurityShiftAssign</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">SecurityShift</li>
+                                </ol>
+                            </nav>
+                            <div class="row">
+                                <div class="col-3">
+
+                                    <!-- @*<h5 class="ml-5 mt-2 text-success">@ViewBag.SuccessMessage</h5>*@ -->
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="text-center">Security Shift</h2>
+                                    <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                                    <h5 class="text-center text-danger">@ViewBag.ExceptionError</h5>
+                                    <h5 id="ErrorMessage" class="text-center text-danger">@ViewBag.Error</h5>
+                                    @*<h5 class="text-center text-success">@ViewBag.SuccessMessage</h5>*@
+                                </div>
+                                <div class="col-2"></div>
+                                <div class="col-2">
+                                    <a class="btn btn-primary" href="@Url.Action("SecurityShiftAssign","Admin")">Assign Shift</a>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <span id="ShiftCount" style="display: none">@Model.Count()</span>
+
+                            <div>
+                                <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="SecurityShift" class="m-4 pb-5" name="register-form">
+                                    <div class="tab-content">
+                                        <div class="DriverTab" id="drivers">
+                                            <div class="border rounded-top p-3 mx-3">
+                                                <table class="table table-bordered text-center" id="DataTable">
+                                                    <thead class="p-3 text-center">
+                                                        <tr>
+                                                            <th scope="col" class="text-primary">Type of Shift</th>
+                                                            <th scope="col" class="text-primary">Short Form</th>
+                                                            <th scope="col" class="text-primary">Working From</th>
+                                                            <th scope="col" class="text-primary">Working To</th>
+                                                            <th scope="col" class="text-primary">Working hours</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if (Model.Count() > 0)
+                                                        {
+                                                            @for (var row = 0; row < Model.Count(); row++)
+                                                            {
+                                                                <div class="row" style="display: none">
+                                                                    <div class="col-3">
+                                                                        <input type="text" class="form-control text-center" asp-for="@Model[row].ShiftType" id="ShiftType(@row)" readonly/>
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <input type="text" class="form-control text-center" asp-for="@Model[row].WorkingFrom" id="AlternateShiftFromTime(@row)" readonly/>
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <input type="text" class="form-control text-center" asp-for="@Model[row].WorkingTo" id="AlternateShiftToTime(@row)" readonly/>
+                                                                    </div>
+                                                                </div>
+                                                                <tr>
+                                                                    <td>
+                                                                        @if(@Model[row].ShiftType == "SH1")
+                                                                        {
+                                                                            <p>Shift 1</p>
+                                                                        }
+                                                                        else if(@Model[row].ShiftType == "GSH")
+                                                                        {
+                                                                            <p>General Shift</p>
+                                                                        }
+                                                                        else if(@Model[row].ShiftType == "SH2")
+                                                                        {
+                                                                            <p>Shift 2</p>
+                                                                        }
+                                                                        else if(@Model[row].ShiftType == "SH3")
+                                                                        {
+                                                                            <p>Shift 3</p>
+                                                                        }
+                                                                    </td>
+                                                                    <td>@Model[row].ShiftType</td>
+                                                                    <td>
+                                                                        <input type="time" class="form-control text-center" id="ShiftFromTime(@row)" onclick="configureWorkingHours(@row)" onchange="configureWorkingHours(@row)"/>
+                                                                        <span id="validatefromtime(@row)" class="text-danger"></span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="time" class="form-control text-center" id="ShiftToTime(@row)" onclick="configureWorkingHours(@row)" onchange="configureWorkingHours(@row)"/>
+                                                                        <span id="validatetotime(@row)" class="text-danger"></span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" class="form-control text-center" asp-for="@Model[row].WorkingHours" id="WorkingHours(@row)" readonly/>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+
+                                                <button type="submit" class="btn btn-primary px-5 mt-2 float-end" onclick="return validateForm()">Submit</button>
+                                                <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("SecurityShiftAssign","Admin")">Go Back</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/admin/security-shift.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DataTable').DataTable();
+    });
+</script>

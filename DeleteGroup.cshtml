@@ -1,0 +1,76 @@
+﻿@using Digitalization.Models.AdminModel
+@model GroupModel
+
+<link rel="stylesheet" href="~/assets/css/admin/common.css" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">Admin</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("ViewGroups","Admin")" style="text-decoration: none">ViewGroups</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Delete Group</li>
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">Delete Group</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+                        <hr>
+                        <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="DeleteGroup" class="m-4 pb-5" name="register-form">
+                            <div class="tab-content">
+                                <div class="" id="userdetails">
+                                    <div class="row">
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <div class="row">
+                                                <!-- hidden field start-->
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="GroupId" class="form-label">Group ID</label>
+                                                    <input type="text" asp-for="GroupId" class="form-control" id="GroupId" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3" style="display: none">
+                                                    <label for="CenterID" class="form-label">Center ID</label>
+                                                    <input type="text" asp-for="CenterID" class="form-control" id="CenterID" readonly>
+                                                </div>
+                                                <!-- hidden field end-->
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="GroupName" class="form-label">Group Name</label>
+                                                    <input type="text" asp-for="GroupName" class="form-control" id="GroupName" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="CenterName" class="form-label">Center Name</label>
+                                                    <input type="text" asp-for="CenterName" class="form-control" id="CenterName" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="GHStaffNumber" class="form-label">Group Head StaffNumber</label>
+                                                    <input type="number" asp-for="GHStaffNumber" class="form-control" id="GHStaffNumber" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SGHStaffNumber" class="form-label">Secondary Group Head StaffNumber</label>
+                                                    <input type="text" asp-for="SGHStaffNumber" id="SGHStaffNumber" class="form-control" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary px-5 mt-2" onclick="return validateForm()">Submit</button>
+                                    <a class="btn btn-primary float-end px-5 mt-2 ml-4" href="@Url.Action("ViewGroups","Admin")">Go Back</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/admin/delete-group.js"></script>

@@ -1,0 +1,140 @@
+﻿@using Digitalization.Models.AdminModel
+@model SearchModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+<link rel="stylesheet" href="~/assets/css/admin/common.css" />>
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <div class="bs-example">
+                            <nav aria-label="breadcrumb" class="pl-3">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Admin")" style="text-decoration: none">Admin</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">EmployeeSearch</li>
+
+                                </ol>
+                            </nav>
+                            <div class="row">
+                                <div class="col-3">
+                                    @*<h5 class="ml-5 mt-2 text-success">@ViewBag.SuccessMessage</h5>*@
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="text-center">Search Employee</h2>
+                                    <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                                    <h5 class="text-center text-danger">@ViewBag.ExceptionError</h5>
+                                    <h5 id="ErrorMessage" class="text-center text-danger">@ViewBag.Error</h5>
+                                    @*<h5 class="text-center text-success">@ViewBag.SuccessMessage</h5>*@
+                                </div>
+                                <div class="col-2"></div>
+                                <div class="col-2">
+
+                                </div>
+                            </div>
+                            <hr>
+                            <form method="post" asp-action="EmployeeSearch" name="search-form">
+                                <div class="m-5">
+                                    <h5 class="mb-3">Please Enter StaffNumber or Select Center and Group</h5>
+                                    <div class="border rounded-top px-4 py-2">
+                                        <div class="row mt-4">
+                                            <div class="col-3">
+                                                <label>StaffNumber</label>
+                                                <input type="number" onwheel="this.blur()" asp-for="StaffNumber" class="form-control" id="StaffNumber" onkeypress="clearstaffnumbervalidation()" onclick="clearstaffnumbervalidation()" autofocus/>
+                                                <span id="validatestaffnumber" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button type="submit" class="btn btn-primary px-5 mt-2 submit-btn" onclick="return validatestaffnumber()">Search</button>
+                                        </div>
+                                    </div>
+                                    <div class="row my-4">
+                                        <div class="col-3"><h5 class="text-center">OR</h5></div>
+                                        <div></div>
+                                    </div>
+                                    <div class="border rounded-top px-4 py-2">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label>Center</label>
+                                                @if (Model.Centers != null)
+                                                {
+                                                    <select asp-for="CenterID" asp-items="@(new SelectList(Model.Centers,"CenterId","CenterName"))" class="form-control" id="CenterId" onclick="return validatecenter()" onchange="reselectcenter()">
+                                                        <option value="-1">Please Select Center</option>
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    <select asp-for="CenterID" class="form-control" id="CenterId" onclick="return validatecenter()">
+                                                        <option value="-1">Please Select Center</option>
+                                                    </select>
+                                                }
+                                                <span id="validatecenterid" class="text-danger">@ViewBag.CenterError</span>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+
+                                            @if (ViewBag.IsCenterSelected != null && ViewBag.IsCenterSelected == true)
+                                            {
+                                                <p id="centerselected" hidden>@ViewBag.IsCenterSelected</p>
+                                                <div class="col-3 row" id="Groups">
+                                                    <div>
+                                                        <label>Group</label>
+                                                        @if (Model.Groups.Count > 0)
+                                                        {
+                                                            <select asp-for="GroupID" asp-items="@(new SelectList(Model.Groups,"GroupId","GroupName"))" class="form-control" id="GroupId" onkeypress="cleargroupvalidation()" onclick="cleargroupvalidation()">
+                                                                <option value="-1">Please Select Group</option>
+                                                            </select>
+                                                        }
+                                                        else
+                                                        {
+                                                            <select asp-for="GroupID" class="form-control" id="GroupId">
+                                                                <option value="-1">Please Select Group</option>
+                                                            </select>
+                                                        }
+                                                        <span id="validategroupid" class="text-danger">@ViewBag.GroupError</span>
+                                                    </div>
+                                                    <div class="col-2 mt-2">
+                                                        <button type="submit" class="btn btn-primary px-5 mt-2 submit-btn" id="searchbutton" onclick="return validatecenter()">Search</button>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <p id="centernotselected" hidden>1</p>
+                                                <div class="col-3 row" id="Groups">
+                                                    <div class="col-12">
+                                                        <button type="submit" class="btn btn-primary px-5 my-3 submit-btn">Fetch Groups</button>
+                                                    </div>
+                                                    <div>
+                                                        <label>Group</label>
+                                                        <select asp-for="GroupID" class="form-control" id="GroupId">
+                                                            <option value="-1">Please Select Group</option>
+                                                        </select>
+                                                        <span id="validategroupid" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ml-5">
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/admin/employee-search.js"></script>
+
+<script>
+</script>

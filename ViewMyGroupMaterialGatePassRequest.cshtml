@@ -1,0 +1,330 @@
+﻿@using Digitalization.Models.AuthorityModel
+@model List<MaterialGatePassModel>
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+
+<link rel="stylesheet" href="~/assets/css/authority/common.css" />
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">Authority</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("MaterialGatePass","User")" style="text-decoration: none">MaterialGatePass</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("MyGroupMaterialGatePassRequestWithoutFilter","Authority")" style="text-decoration: none">MyGroupMaterialGatePassRequest</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">ViewMyGroupMaterialGatePassRequest</li>
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">Material Gate Pass</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+                        <hr>
+                        <form method="post" enctype="multipart/form-data" asp-action="ViewMyMaterialGatePassRequest" class="m-4 pb-5" name="request-form">
+                            <div class="tab-content">
+                                @if (Model != null)
+                                {
+                                <div class="" id="userdetails">
+                                    @{
+                                        bool flag = true;
+                                    }
+                                    @for (var row = 0; row < Model.Count(); row++)
+                                    {
+                                    <div class="row">
+                                        @if (flag)
+                                        {
+                                            flag = false;
+                                            <!---Fields that will not show and only for model purpose--->
+                                            <!--- start --->
+                                            <div class="row m-1 border rounded-top mt-4 p-3" style="display: none">
+                                                <div class="col-xl-3 col-lg-5 col-md-6 mb-3">
+                                                    <label for="AttachmentLocation" class="form-label">AttachmentLocation</label>
+                                                    <input type="text" asp-for="@Model[row].AttachmentLocation" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-5 col-md-6 mb-3">
+                                                    <label for="SignatureFileLocation" class="form-label">SignatureFileLocation</label>
+                                                    <input type="text" asp-for="@Model[row].SignatureFileLocation" class="form-control" readonly>
+                                                </div>
+                                            </div>
+                                            <!--- end --->
+                                            <div class="row m-1 border rounded-top mt-4 p-3">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                    <label for="GatePassID" class="form-label">Gate Pass ID</label>
+                                                    <input type="text" asp-for="@Model[row].GatePassID" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-5 col-md-6 mb-3">
+                                                    <label for="PreparedDateTime" class="form-label">Prepared On</label>
+                                                    <input type="text" asp-for="@Model[row].PreparedDateTime" id="PreparedDateTime" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-5 col-md-6 mb-3" style="display: none">
+                                                    <label for="PreparedDateTime" class="form-label">Prepared On</label>
+                                                    <input type="text" id="AlternatePreparedDateTime" class="form-control" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="row m-1 border rounded-top mt-4 p-3">
+                                                <h4 class="text-center text-primary">Prepared By</h4>
+                                                <div class="row">
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                        <label for="PreparedByStaffNumber" class="form-label">Staff Number</label>
+                                                        <input type="text" asp-for="@Model[row].PreparedByStaffNumber" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                        <label for="PreparedByFirstName" class="form-label">Name</label>
+                                                        <input type="text" asp-for="@Model[row].PreparedByFirstName" class="form-control" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <p>The following materials are permitted to be taken out of the Institute premises from the Main Gate to:</p>
+                                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6  mb-3">
+                                                        <label for="Address" class="form-label">Address in Full</label>
+                                                        <textarea class="form-control" asp-for="@Model[row].Address" id="Address" readonly></textarea>
+                                                    </div>
+                                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6  mb-3">
+                                                        <label for="Purpose" class="form-label">Purpose</label>
+                                                        <textarea class="form-control" asp-for="@Model[row].Purpose" id="Purpose" readonly></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3" style="display: none">
+                                                        <label for="ReturnType" class="form-label">Return Type</label>
+                                                        <input type="text" asp-for="@Model[row].ReturnType" class="form-control" readonly>
+                                                    </div>
+                                                    @if (@Model[row].ReturnType == 1)
+                                                    {
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="ReturnType" class="form-label">Return Type</label>
+                                                            <input type="text" value="Returnable" class="form-control" readonly>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="ReturnType" class="form-label">Return Type</label>
+                                                            <input type="text" value="Non Returnable" class="form-control" readonly>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="row m-1 border rounded-top mt-4 p-3">
+                                                <h5 class="text-center mt-4 text-primary">Taken By</h5>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                    <label for="TakenByName" class="form-label">Name</label>
+                                                    <input type="text" asp-for="@Model[row].TakenByName" id="TakenByName" class="form-control" readonly>
+                                                    <span id="validatetakenbyname" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                    <label for="TakenByPhoneNumber" class="form-label">Phone Number</label>
+                                                    <input type="text" asp-for="@Model[row].TakenByPhoneNumber" id="TakenByPhoneNumber" class="form-control" readonly>
+                                                    <span id="validatetakenbymobilenumber" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                    <label for="TakenByCompanyName" class="form-label">Company Name</label>
+                                                    <input type="text" asp-for="@Model[row].TakenByCompanyName" id="TakenByCompanyName" class="form-control" readonly>
+                                                    <span id="validatetakenbycompanyname" class="text-danger"></span>
+                                                </div>
+
+                                                @if(@ViewBag.SignatureFileLocation != null)
+                                                {
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                        <p class="">Signature</p>
+                                                        <img src="@ViewBag.SignatureFileLocation" height="150" />
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="row m-1 border rounded-top mt-4 p-3" style="display: none">
+                                                <h5 class="text-center mt-4 text-primary">Checked By</h5>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                    <label for="ReportingOfficer" class="form-label">Staff Number</label>
+                                                    <input type="text" asp-for="@Model[row].ReportingOfficer" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                    <label for="ReportingOfficerName" class="form-label">Name</label>
+                                                    <input type="text" asp-for="@Model[row].ReportingOfficerName" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                    <label for="ReportingOfficerName" class="form-label">Designation</label>
+                                                    <input type="text" asp-for="@Model[row].ReportingOfficerDesignation" class="form-control" readonly>
+                                                </div>
+                                            </div>
+                                            <h5 class="text-center mt-4 text-primary">Items</h5>
+                                            @if(@Model[row].IsAttachmentPresent == false)
+                                            {
+                                                <div class="m-1 border rounded-top mt-4 p-3">
+                                                    @{ 
+                                                        int slno = 1;
+                                                    }
+                                                    @foreach (var item in @Model[row].Items)
+                                                    {
+                                                        <div class="row">
+                                                            <div class="col-md-1 col-lg-1 col-sm-1 col-1  mb-3">
+                                                                <label for="SlNo" class="form-label">Sl.No.</label>
+                                                                <input type="number" value="@slno" class="form-control" readonly />
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-3 col-3  mb-3">
+                                                               <label for="Particular" class="form-label">Particulars</label>
+                                                              <textarea class="form-control" asp-for="@item.Particulars" readonly></textarea>
+                                                               <span id="validateparticular(@item)" class="text-danger"></span>
+                                                            </div>
+                                                            <div class="col-md-2 col-lg-2 col-sm-2 col-2  mb-3">
+                                                                <label for="Quantity" class="form-label">Quantity</label>
+                                                                <input type="text" asp-for="@item.Quantity" class="form-control" readonly />
+                                                            </div>
+                                                            @if(@Model[row].OldStatus == "IN" || @Model[row].OldStatus == "PARTIAL IN")
+                                                            {
+                                                                <div class="col-md-2 col-lg-2 col-sm-2 col-2  mb-3">
+                                                                    <label for="Status" class="form-label">Status</label>
+                                                                    <input type="text" asp-for="@item.Status" class="form-control" readonly />
+                                                                </div>
+                                                            }
+                                                            <div class="col-md-3 col-lg-3 col-sm-3 col-3  mb-3">
+                                                                <label for="ParticularRemarks" class="form-label">Remarks</label>
+                                                                <textarea class="form-control" asp-for="@item.ParticularRemarks" readonly></textarea>
+                                                            </div>
+                                                        </div>
+                                                        slno += 1;
+                                                    }
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="m-1 border rounded-top mt-4 p-3 row">
+                                                    @if (@ViewBag.AlteredAttachementLocation != null)
+                                                    {
+                                                        string ID = @Model[row].GatePassID + "-" + @Model[row].OldStatus;
+                                                        string Location = @ViewBag.AlteredAttachementLocation;
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="Attachment" class="form-label">Attachment</label>
+                                                            <a class="form-control" style="text-decoration: none" href="@Location" download="@ID" target="_blank" readonly>Download</a>
+                                                        </div>
+                                                    }
+                                                    @if (@ViewBag.AlteredInAttachementLocation != null)
+                                                    {
+                                                        string ID = @Model[row].GatePassID + "-" + @Model[row].OldStatus;
+                                                        string Location = @ViewBag.AlteredInAttachementLocation;
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="Attachment" class="form-label">IN Attachment</label>
+                                                            <a class="form-control" style="text-decoration: none" href="@Location" download="@ID" target="_blank" readonly>Download</a>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                            
+                                        }
+                                    </div>
+                                    
+                                        <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("MyGroupMaterialGatePassRequestWithoutFilter","Authority")">Go Back</a>
+                                        
+                                        break;
+                                    }
+                                    <h5 class="text-center mt-4 text-primary">Gate Pass Status</h5>
+                                    <div class="m-1 border rounded-top mt-4 p-3">
+                                            @{
+                                                int i = 1;
+                                                string PreviousStatus = "";
+                                            }
+                                        @foreach (var gatepass in Model)
+                                        {
+                                            @if((gatepass.OldStatus == "OUT" && i==1)
+                                                || (gatepass.OldStatus == "OUT" && PreviousStatus=="PARTIAL IN")
+                                                || (gatepass.OldStatus == "IN" && PreviousStatus=="OUT"))
+                                            {
+                                                <div class="row">
+                                                    <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                        <label for="Status" class="form-label">Status</label>
+                                                        <input type="text" value="TAKEN OUT" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                        <label for="FirstName" class="form-label">Name</label>
+                                                        <input type="text" asp-for="@gatepass.TakenByName" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                        <label for="Designation" class="form-label">Phone Number</label>
+                                                        <input type="text" asp-for="@gatepass.TakenByPhoneNumber" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                        <label for="Designation" class="form-label">Company Name</label>
+                                                        <input type="text" asp-for="@gatepass.TakenByCompanyName" class="form-control" readonly>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                flag=false;
+                                            }
+                                            <div class="row">
+                                                <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                    <label for="Status" class="form-label">Status</label>
+                                                    @if(@gatepass.OldStatus == "OUT")
+                                                    {
+                                                        <input type="text" value="ALLOWED TO TAKE OUT" class="form-control" readonly>
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="text" asp-for="@gatepass.OldStatus" class="form-control" readonly>
+                                                    }
+                                                </div>
+                                                <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                    <label for="StaffNumber" class="form-label">Staff Number</label>
+                                                    <input type="text" asp-for="@gatepass.ActionTakenByStaffNumber" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                    <label for="FirstName" class="form-label">First Name</label>
+                                                    <input type="text" asp-for="@gatepass.ActionTakenByName" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                    <label for="Designation" class="form-label">Designation</label>
+                                                    <input type="text" asp-for="@gatepass.ActionTakenByDesignation" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-5 col-md-6 mb-3">
+                                                    <label for="Date" class="form-label">Date</label>
+                                                    <input type="text" asp-for="@gatepass.DateTime" id="DateTime(@i)" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-5 col-md-6 mb-3" style="display: none">
+                                                    <label for="Date" class="form-label">Date</label>
+                                                    <input type="text" id="AlternateDateTime(@i)" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-4 col-lg-4 col-md-4 mb-3">
+                                                    <label for="Remarks" class="form-label">Remarks</label>
+                                                    <textarea class="form-control" asp-for="@gatepass.OldRemarks" readonly></textarea>
+                                                </div>
+                                                @if (@gatepass.AlteredInAttachementLocation != null && 
+                                                (@gatepass.OldStatus=="IN" || @gatepass.OldStatus=="PARTIAL IN"))
+                                                {
+                                                    string ID = @gatepass.GatePassID + "-" + @gatepass.OldStatus;
+                                                    string Location = @gatepass.AlteredInAttachementLocation;
+                                                    <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                        <label for="Attachment" class="form-label">IN Attachment</label>
+                                                        <a class="form-control" style="text-decoration: none" href="@Location" download="@ID" target="_blank" readonly>Download</a>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <hr />
+                                            PreviousStatus = @gatepass.OldStatus;
+                                            i++;
+                                        }
+                                    @*@if(@ViewBag.SignatureFileLocation != null)
+                                    {
+                                        <div class="text-center border mt-4">
+                                            <h5 class="text-info">Signature Image</h5>
+                                            <img src="@ViewBag.SignatureFileLocation" height="200" />
+                                        </div>
+                                    }*@
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/authority/view-my-group-material-gatepass-request.js"></script>

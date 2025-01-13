@@ -1,0 +1,222 @@
+﻿@using Digitalization.Models.AuthorityModel
+@model List<VehicleIndentModel>
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css" />
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                    <li class="breadcrumb-item"><a href="@Url.Action("VehicleIndent","User")" style="text-decoration: none">VehicleIndent</a></li>
+                                    <li class="breadcrumb-item"><a href="@Url.Action("MyGroupVehicleIndentRequestWithoutFilter","Authority")" style="text-decoration: none">MyGroupVehicleRequest</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">ViewMyGroupVehicleRequest</li>
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">Vehicle Indent Request</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+                        <hr>
+                        <form method="post" enctype="multipart/form-data" asp-action="ViewMyGroupVehicleIndentRequest" class="m-4 pb-5" name="request-form">
+                            <div class="tab-content">
+                                @if (Model != null)
+                                {
+                                <div class="" id="userdetails">
+                                    @{
+                                        bool flag = true;
+                                    }
+                                    @for (var row = 0; row < Model.Count(); row++)
+                                    {
+                                        <div class="row">
+                                            @if (flag)
+                                            {
+                                                flag = false;
+                                                <!---Fields that will not show and only for model purpose--->
+                                                <!--- start --->
+                                                <div class="row m-1 border rounded-top mt-4 p-3" style="display: none">
+                                                    <div class="col-3 mb-3" style="display: none">
+                                                        <label for="IndentID" class="form-label">Indent ID</label>
+                                                        <input type="text" asp-for="@Model[row].IndentID" class="form-control" readonly>
+                                                    </div>
+                                                </div>
+                                                <!--- end --->
+                                                <div class="row m-1 border rounded-top mt-4 p-3">
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                        <label for="IndentID" class="form-label">Indent ID</label>
+                                                        <input type="text" asp-for="@Model[row].IndentID" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-3 col-lg-5 col-md-6 mb-3">
+                                                        <label for="IndentRaisedDate" class="form-label">Date of Indent Raised</label>
+                                                        <input type="datetime-local" asp-for="@Model[row].IndentRaisedDateTime" class="form-control" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="row m-1 border rounded-top mt-4 p-3">
+                                                    <div class="row">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="SenderStaffNumber" class="form-label">Indentor Staff Number</label>
+                                                            <input type="text" asp-for="@Model[row].SenderStaffNumber" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="SenderFirstName" class="form-label">Indentor Name</label>
+                                                            <input type="text" asp-for="@Model[row].SenderFirstName" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="SenderFirstName" class="form-label">Required Date</label>
+                                                            <input type="text" asp-for="@Model[row].AlteredIndentRequiredDate" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="SenderFirstName" class="form-label">Required Time</label>
+                                                            <input type="text" asp-for="@Model[row].AlteredIndentRequiredTime" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="ProjectNumber" class="form-label">Vehicle For</label>
+                                                            <textarea asp-for="@Model[row].VehicleFor" class="form-control" readonly></textarea>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="ProjectName" class="form-label">Organization/Firm</label>
+                                                            <input type="text" asp-for="@Model[row].Organization" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="ToGroupName" class="form-label">Distance</label>
+                                                            <input type="text" asp-for="@Model[row].Distance" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="ToCenterName" class="form-label">Duration of Work</label>
+                                                            <input type="text" asp-for="@Model[row].DurationOfWork" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h5 class="text-center mt-4 text-primary">Reporting Officer</h5>
+                                                <div class="row m-1 border rounded-top mt-4 p-3">
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                        <label for="ReportingOfficerStaffNumber" class="form-label">Staff Number</label>
+                                                        <input type="text" asp-for="@Model[row].ReportingOfficerStaffNumber" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                        <label for="ReportingOfficerName" class="form-label">Name</label>
+                                                        <input type="text" asp-for="@Model[row].ReportingOfficerName" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                        <label for="ReportingOfficerDesignation" class="form-label">Designation</label>
+                                                        <input type="text" asp-for="@Model[row].ReportingOfficerDesignation" class="form-control" readonly>
+                                                    </div>
+                                                </div>
+                                                <h5 class="text-center mt-4 text-primary">Assigned To</h5>
+                                                <div class="row m-1 border rounded-top mt-4 p-3">
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                        <label for="RecieverStaffNumber" class="form-label">Staff Number</label>
+                                                        <input type="text" asp-for="@Model[row].RecieverStaffNumber" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                        <label for="RecieverName" class="form-label">Name</label>
+                                                        <input type="text" asp-for="@Model[row].RecieverName" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                        <label for="RecieverName" class="form-label">Designation</label>
+                                                        <input type="text" asp-for="@Model[row].RecieverDesignation" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3"></div>
+                                                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                        <label for="VehicleNumber" class="form-label">Vehicle Number</label>
+                                                        <input type="text" asp-for="@Model[row].VehicleNumber" class="form-control" readonly>
+                                                    </div>
+                                                    @if(@Model[row].OldIndentStatus == "COMPLETED")
+                                                    {
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="ReturnTiming" class="form-label">Return Timing</label>
+                                                            <input type="text" asp-for="@Model[row].AlternateReturnTiming" class="form-control" readonly>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="ReturnTiming" class="form-label">Return Timing</label>
+                                                            <input type="text" class="form-control" readonly>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+
+                                        <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("MyGroupVehicleIndentRequestWithoutFilter","Authority")">Go Back</a>
+
+                                        <h5 class="text-center mt-4 text-primary">Name(s) of the person(s) using the vehicle</h5>
+                                        <div class="m-1 border rounded-top mt-4 p-3">
+                                            @foreach (var employee in @Model[row].IndentInvolvedPersons)
+                                            {
+                                                <div class="row">
+                                                    <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                        <label for="Status" class="form-label">StaffNumber</label>
+                                                        <input type="text" asp-for="@employee.StaffNumber" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                        <label for="Status" class="form-label">Name</label>
+                                                        <input type="text" asp-for="@employee.Name" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                        <label for="StaffNumber" class="form-label">Internal Phone Number</label>
+                                                        <input type="text" asp-for="@employee.InternalPhoneNumber" class="form-control" readonly>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        break;
+                                    }
+                                    <h5 class="text-center mt-4 text-primary">Indent Status</h5>
+                                    <div class="m-1 border rounded-top mt-4 p-3">
+                                        @foreach (var indent in Model)
+                                        {
+                                            <div class="row">
+                                                <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                    <label for="Status" class="form-label">Status</label>
+                                                    <input type="text" asp-for="@indent.OldIndentStatus" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                    <label for="StaffNumber" class="form-label">Staff Number</label>
+                                                    <input type="text" asp-for="@indent.ActionTakenByStaffNumber" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                    <label for="FirstName" class="form-label">Name</label>
+                                                    <input type="text" asp-for="@indent.ActionTakenByName" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                    <label for="Designation" class="form-label">Designation</label>
+                                                    <input type="text" asp-for="@indent.ActionTakenByDesignation" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-5 col-md-6 mb-3">
+                                                    <label for="Date" class="form-label">Date</label>
+                                                    <input type="datetime-local" asp-for="@indent.DateTime" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-xl-4 col-lg-4 col-md-4 mb-3">
+                                                    <label for="Remarks" class="form-label">Remarks</label>
+                                                    <textarea class="form-control" asp-for="@indent.OldRemarks" readonly></textarea>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                        }
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/user/view-my-vehicle-indent-request.js"></script>

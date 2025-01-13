@@ -1,0 +1,672 @@
+﻿@using Digitalization.Models.AdminModel
+@model List<EmployeeModel>
+
+
+<link rel="stylesheet" href="~/assets/css/admin/common.css" />
+
+<div class="mt-5">
+    <div class="mx-5 mt-5">
+        <br><br>
+        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+        <div class="main p-5">
+            <div class="bs-example row">
+                <nav aria-label="breadcrumb" class="pl-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index","Admin")" style="text-decoration: none">Admin</a></li>
+                        <li class="breadcrumb-item"><a href="@Url.Action("EmployeeSearch","Admin")" style="text-decoration: none">EmployeeSearch</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">EditEmployeeData</li>
+                    </ol>
+                </nav>
+                <h2 class="text-center">Employee Details</h2>
+                <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                <div class="col-10"></div>
+                <div class="col-2 mb-2">
+                    @if (ViewBag.IsPhotoAvailable != null && ViewBag.IsPhotoAvailable == true)
+                    {
+                        @*<img src="~/assets/UserImages/@(ViewBag.StaffNumber).jpg" class="rounded float-end" height="120" style="margin-top: -40px" />*@
+                        <img src="@ViewBag.UserImagePath" class="rounded float-end" height="120" style="margin-top: -40px" />
+                    }
+                    else
+                    {
+                        <img src="~/assets/images/PhotoUnavailable.jpg" class="rounded float-end" height="120" style="margin-top: -40px" />
+                    }
+                </div>
+                <hr>
+                <form novalidate enctype="multipart/form-data" asp-action="EditEmployeeData" method="post" class="m-2 pb-5" name="register-form">
+                    <div class="tab-content">
+                        @if (Model.Count() > 0)
+                        {
+                            @for (var row = 0; row < Model.Count(); row++)
+                            {
+                                <div class="" id="userdetails">
+                                    <div class="row">
+                                        <h4 class="text-center">Personal Details</h4>
+                                        <div class="row m-3 border rounded-top mt-4 pt-2">                                            
+                                            <div class="col-3 mb-3" style="display: none">
+                                                <label for="CenterID" class="form-label bo">Center ID</label>
+                                                <input type="number" asp-for="@Model[row].CenterID" class="form-control" id="CenterID">
+                                            </div>
+                                            <div class="col-3 mb-3" style="display: none">
+                                                <label for="GroupID" class="form-label bo">Group ID</label>
+                                                <input type="number" asp-for="@Model[row].GroupID" class="form-control" id="GroupID">
+                                            </div>
+                                            <div class="col-3 mb-3" style="display: none">
+                                                <label for="GroupID" class="form-label bo">Group ID</label>
+                                                <input type="number" asp-for="@Model[row].GroupID" class="form-control" id="GroupID">
+                                            </div>
+                                            <div class="col-3 mb-3" style="display: none">
+                                                <label for="RetiredDate" class="form-label bo">Retired Date</label>
+                                                <input type="text" asp-for="@Model[row].RetiredDate" class="form-control" id="RetiredDate">
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="StaffNumber" class="form-label bo">Staff Number</label>
+                                                <input type="number" onwheel="this.blur()" asp-for="@Model[row].StaffNumber" class="form-control" id="StaffNumber" onkeypress="clearstaffnumbervalidation()" onclick="clearstaffnumbervalidation()">
+                                                <span id="validatestaffnumber" class="text-danger">@ViewBag.ErrorMessage</span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="FirstName" class="form-label">First Name</label>
+                                                <input type="text" asp-for="@Model[row].FirstName" class="form-control" id="FirstName" onkeypress="clearfirstnamevalidation()" onclick="clearfirstnamevalidation()">
+                                                <span id="validatefirstname" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="col-3 mb-3">
+                                                <label for="MiddleName" class="form-label">Middle Name</label>
+                                                <input type="text" asp-for="@Model[row].MiddleName" class="form-control" id="MiddleName" onkeypress="clearmiddlenamevalidation()" onclick="clearmiddlenamevalidation()">
+                                                <span id="validatemiddlename" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="LastName" class="form-label">Last Name</label>
+                                                <input type="text" asp-for="@Model[row].LastName" class="form-control" id="LastName" onkeypress="clearlastnamevalidation()" onclick="clearlastnamevalidation()">
+                                                <span id="validatelastname" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="PersonalEmailId" class="form-label">Personal Email Id</label>
+                                                <input type="email" asp-for="@Model[row].PersonalEmailId" class="form-control" id="PersonalEmailId" onkeypress="clearpersonalemilaidvalidation()" onclick="clearpersonalemilaidvalidation()">
+                                                <span id="validatepersonalemailid" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3" id="OfficialEmailidDiv">
+                                                <label for="OfficialEmailId" class="form-label">Official Email Id</label>
+                                                <input type="email" asp-for="@Model[row].OfficialEmailId" class="form-control" id="OfficialEmailId" onkeypress="clearofficialemailidvalidation()" onclick="clearofficialemailidvalidation()">
+                                                <span id="validateofficialemailid" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="DateOfBirth" class="form-label">Date Of Birth</label>
+                                                <input type="date" asp-for="@Model[row].DateOfBirth" class="form-control" id="DateOfBirth" onclick="cleardateofbirthvalidation()">
+                                                <span id="validatedateofbirth" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="Gender" class="form-label">Gender</label>
+                                                <select asp-for="@Model[row].Gender" class="form-control" id="Gender" onchange="cleargendervalidation()" onclick="cleargendervalidation()">
+                                                    <option value="Null">Please Select Your Gender</option>
+                                                    <option value="M">Male</option>
+                                                    <option value="F">Female</option>
+                                                    <option value="O">Other</option>
+                                                </select>
+                                                <span id="validategender" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="BloodGroup" class="form-label">Blood Group</label>
+                                                <select asp-for="@Model[row].BloodGroup" class="form-control" id="BloodGroup" onchange="clearbloodgroupvalidation()" onclick="clearbloodgroupvalidation()">
+                                                    <option value="Null">Please Select Blood Group</option>
+                                                    <option value="A +ve">A +ve</option>
+                                                    <option value="A -ve">A -ve</option>
+                                                    <option value="B +ve">B +ve</option>
+                                                    <option value="B -ve">B -ve</option>
+                                                    <option value="AB +ve">AB +ve</option>
+                                                    <option value="AB -ve">AB -ve</option>
+                                                    <option value="O +ve">O +ve</option>
+                                                    <option value="O -ve">O -ve</option>
+                                                </select>
+                                                <span id="validatebloodgroup" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="MobilePhoneNumber" class="form-label">Mobile Phone Number</label>
+                                                <input type="number" onwheel="this.blur()" asp-for="@Model[row].MobilePhoneNumber" class="form-control" id="MobilePhoneNumber" onkeypress="clearmobilenumbervalidation()" onclick="clearmobilenumbervalidation()">
+                                                <span id="validatemobilephoneno" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="  col-3 mb-3">
+                                                <label for="DateOfJoining" class="form-label">Date Of Joining</label>
+                                                <input type="date" asp-for="@Model[row].DateOfJoining" class="form-control" id="DateOfJoining" onclick="cleardateofjoiningvalidation()">
+                                                <span id="validatedateofjoining" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="col-3 mb-3">
+                                                <label for="DateOfRetirement" id="DateOfRetirementLabel" class="form-label">Date Of Retirement</label>
+                                                <input type="date" asp-for="@Model[row].DateOfRetirement" class="form-control" id="DateOfRetirement" onclick="cleardateofretirementvalidation()">
+                                                <span id="validatedateofretirement" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="col-3 mb-3" id="MaritalStatusDiv">
+                                                <label for="MaritalStatus" class="form-label">Marital Status</label>
+                                                <select asp-for="@Model[row].MaritalStatus" class="form-control" id="MaritalStatus" onchange="clearmaritalstatusvalidation()" onclick="clearmaritalstatusvalidation()">
+                                                    <option value="Null">Please Select Marital Status</option>
+                                                    <option value="M">Married</option>
+                                                    <option value="U">Unmarried</option>
+                                                    <option value="D">Divorcee</option>
+                                                    <option value="W">Widow</option>
+                                                </select>
+                                                <span id="validatemaritalstatus" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row m-3 border rounded-top mt-4 pt-2">
+                                            <div class="col-3 mb-3" id="EmployeeGroupDiv">
+                                                <label for="EmployeeGroup" class="form-label">Employee Group</label>
+                                                <select asp-for="@Model[row].EmployeeGroup" class="form-control" id="EmployeeGroup" onchange="clearemployeegroupvalidation()" onclick="clearemployeegroupvalidation()">
+                                                    <option value="Null">Please Select Employee Group</option>
+                                                    <option value="A">A</option>
+                                                    <option value="B">B</option>
+                                                    <option value="C">C</option>
+                                                    <option value="D">D</option>
+                                                </select>
+                                                <span id="validateemployeegroup" class="text-danger"></span>
+                                            </div>
+                                            @if (@Model[row].Designations != null)
+                                            {
+                                                <div class="col-3 mb-3">
+                                                    <label for="Designation" class="form-label">Designation</label>
+                                                    <select asp-for="@Model[row].Designation" asp-items="@(new SelectList(@Model[row].Designations,"DesignationName","DesignationName"))" class="form-control" id="Designation" onchange="cleardesignationvalidation()" onclick="cleardesignationvalidation()">
+                                                        <option value="Null">Please Select Designation</option>
+                                                    </select>
+                                                    <span id="validatedesignation" class="text-danger"></span>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-3 mb-3">
+                                                    <label for="Designation" class="form-label">Designation</label>
+                                                    <select asp-for="@Model[row].Designation" class="form-control" id="Designation">
+                                                        <option value="Null">Please Select Designation</option>
+                                                    </select>
+                                                    <span id="validatedesignation" class="text-danger"></span>
+                                                </div>
+                                            }
+                                            <div class="col-3 mb-3">
+                                                <label for="TechNonTech" class="form-label">Type of Work</label>
+                                                <select asp-for="@Model[row].TechNonTech" class="form-control" id="TechNonTech" onchange="cleartechnontechvalidation()" onclick="cleartechnontechvalidation()">
+                                                    <option value="Null">Please Select Any one</option>
+                                                    <option value="Tech">Tech</option>
+                                                    <option value="NonTech">NonTech</option>
+                                                    <option value="Scientific">Scientific</option>
+                                                </select>
+                                                <span id="validatetechnontech" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="CasteCategory" class="form-label">Caste Category</label>
+                                                <select asp-for="@Model[row].CasteCategory" class="form-control" id="CasteCategory" onchange="clearcastecategoryvalidation()" onclick="clearcastecategoryvalidation()">
+                                                    <option value="Null">Please Select Caste Category</option>
+                                                    <option value="SC">SC</option>
+                                                    <option value="ST">ST</option>
+                                                    <option value="OBC">OBC</option>
+                                                    <option value="General">General</option>
+                                                    <option value="EWS">EWS</option>
+                                                </select>
+                                                <span id="validatecastecategory" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="IsMinorities" class="form-label">Minority</label>
+                                                <select asp-for="@Model[row].IsMinorities" class="form-control" id="IsMinorities" onchange="toggleminorities(this)" onclick="clearisminoritiesvalidation()">
+                                                    <option value="-1">Please Select Any one</option>
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                                <span id="validateisminorities" class="text-danger"></span>
+                                            </div>
+                                            @if (@Model[row].MinorityModel != null)
+                                            {
+                                                <div class="col-3 mb-3" id="MinoritiesDiv">
+                                                    <label for="Minorities" class="form-label">Minority Category</label>
+                                                    <select asp-for="@Model[row].Minorities" asp-items="@(new SelectList(@Model[row].MinorityModel,"MinorityID","Minorities"))" class="form-control" id="Minorities" onchange="clearminoritiesvalidation()">
+                                                        <option value="Null">Please Select Category</option>
+                                                    </select>
+                                                    <span id="validateminorities" class="text-danger"></span>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-3 mb-3" id="MinoritiesDiv">
+                                                    <label for="Minorities" class="form-label">Minority Category</label>
+                                                    <select asp-for="@Model[row].Minorities" class="form-control" id="Minorities">
+                                                        <option value="Null">Please Select Category</option>
+                                                    </select>
+                                                    <span id="validateminorities" class="text-danger"></span>
+                                                </div>
+                                            }
+                                            <div class="col-3 mb-3">
+                                                <label for="IsPhysicallyHandicapped" class="form-label">Physically Handicapped</label>
+                                                <select asp-for="@Model[row].IsPhysicallyHandicapped" class="form-control" id="IsPhysicallyHandicapped" onchange="togglehandicapped(this)" onclick="clearisphysicallyhandicappedvalidation()">
+                                                    <option value="-1">Please Select Any one</option>
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                                <span id="validateisphysicallyhandicapped" class="text-danger"></span>
+                                            </div>
+                                            @if (@Model[row].PhysicallyHandicappedModel != null)
+                                            {
+                                                <div class="col-3 mb-3" id="PhysicallyHandicappedDiv">
+                                                    <label for="PhysicallyHandicapped" class="form-label">Disabilities</label>
+                                                    <select asp-for="@Model[row].PhysicallyHandicapped" asp-items="@(new SelectList(@Model[row].PhysicallyHandicappedModel,"PhysicallyHandicappedID","Disabilities"))" class="form-control" id="PhysicallyHandicapped" onchange="clearphysicallyhandicappedvalidation()" onclick="clearphysicallyhandicappedvalidation()">
+                                                        <option value="Null">Please Select Disabilities</option>
+                                                    </select>
+                                                    <span id="validatephysicallyhandicapped" class="text-danger"></span>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-3 mb-3" id="PhysicallyHandicappedDiv">
+                                                    <label for="PhysicallyHandicapped" class="form-label">Disabilities</label>
+                                                    <select asp-for="@Model[row].PhysicallyHandicapped" class="form-control" id="PhysicallyHandicapped">
+                                                        <option value="Null">Please Select Disabilities</option>
+                                                    </select>
+                                                    <span id="validatephysicallyhandicapped" class="text-danger"></span>
+                                                </div>
+                                            }
+                                            <div class="col-3 mb-3">
+                                                <label for="IsExServiceMen" class="form-label">Ex-Servicemen</label>
+                                                <select asp-for="@Model[row].IsExServiceMen" class="form-control" id="IsExServiceMen" onchange="clearexservicemenvalidation()" onclick="clearexservicemenvalidation()">
+                                                    <option value="-1">Please Select Any one</option>
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                                <span id="validateisexservicemen" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="EmployeeCategory" class="form-label">Employee Category</label>
+                                                <input type="text" asp-for="@Model[row].EmployeeCategory" class="form-control" id="EmployeeCategory" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="EmployeeWorkingStatus" class="form-label">Working Status</label>
+                                                <select class="form-control" asp-for="@Model[row].WorkingStatus" id="WorkingStatus" onclick="toggleworkingstatus()" onchange="toggleworkingstatus()">
+                                                    <option value="Null">Please Select Any one</option>
+                                                    <option value="IN SERVICE">IN SERVICE</option>
+                                                    <option value="RETIRED">RETIRED</option>
+                                                    <option value="RESSIGNED">RESSIGNED</option>
+                                                </select>
+                                                <span id="validateworkingstatus" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3" id="retireddatediv">
+                                                <label for="AlternateRetiredDate" class="form-label">Date</label>
+                                                <input type="date" class="form-control" id="AlternateRetiredDate" onchange="clearretireddatevalidation()" onclick="clearretireddatevalidation()">
+                                                <span id="validateretireddate" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row m-3 border rounded-top mt-4 pt-2">
+                                            <div class="col-3 mb-3" id="EntryLevelDiv">
+                                                <label for="EntryLevel" class="form-label">Entry Level</label>
+                                                <input type="text" asp-for="@Model[row].EntryLevel" class="form-control" id="EntryLevel" onkeypress="clearentrylevelvalidation()" onclick="clearentrylevelvalidation()">
+                                                <span id="validateentrylevel" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="col-3 mb-3" id="CurrentBasicPayDiv">
+                                                <label for="CurrentBasicPay" class="form-label">Current BasicPay</label>
+                                                <input type="number" onwheel="this.blur()" asp-for="@Model[row].CurrentBasicPay" class="form-control" id="CurrentBasicPay" onkeypress="clearcurrentbasicpayvalidation()" onclick="clearcurrentbasicpayvalidation()">
+                                                <span id="validatecurrentbasicpay" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="PayMatrix" id="PayMatrixLabel" class="form-label">Pay Matrix</label>
+                                                <input type="number" onwheel="this.blur()" asp-for="@Model[row].PayMatrix" class="form-control" id="PayMatrix" onkeypress="clearpaymatrixvalidation()" onclick="clearpaymatrixvalidation()">
+                                                <span id="validatepaymatrix" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="PAN" class="form-label">PAN</label>
+                                                <input type="text" asp-for="@Model[row].PAN" class="form-control" id="PAN" onkeypress="clearpanvalidation()" onclick="clearpanvalidation()">
+                                                <span id="validatepannumber" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="AdharNumber" class="form-label">Aadhar Number</label>
+                                                <input type="text" asp-for="@Model[row].AadharNumber" class="form-control" id="AadharNumber" onkeypress="clearaadharvalidation()" onclick="clearaadharvalidation()">
+                                                <span id="validateaadharnumber" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="AccountNumber" class="form-label">Bank Account Number</label>
+                                                <input type="text" asp-for="@Model[row].AccountNumber" class="form-control" id="AccountNumber" onkeypress="clearaccountnumbervalidation()" onclick="clearaccountnumbervalidation()">
+                                                <span id="validateaccountnumber" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3" id="SpouseInGovtDiv">
+                                                <label for="SpouseInGovernment" class="form-label">Spouse In Government Service</label>
+                                                <select asp-for="@Model[row].SpouseInGovernment" class="form-control" id="SpouseInGovernment" onchange="clearspouseingovtvalidation()" onclick="clearspouseingovtvalidation()">
+                                                    <option value="Null">Please Select Any one</option>
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No">No</option>
+                                                </select>
+                                                <span id="validatespouseingovernment" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3" id="HRADiv">
+                                                <label for="IsHRAApplicable" class="form-label">HRA Applicable</label>
+                                                <select asp-for="@Model[row].IsHRAApplicable" class="form-control" id="IsHRAApplicable" onchange="clearhraapplicablevalidation()">
+                                                    <option value="-1">Please Select Any one</option>
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                                <span id="validateishraapplicable" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="m-3 border rounded-top mt-4 p-0 pt-2">
+                                            <div class="row m-3 p-0">
+                                                <div class="col-6 mb-3">
+                                                    <label for="PresentAddress" class="form-label">Present Address</label>
+                                                    <textarea asp-for="@Model[row].PresentAddress" class="form-control" id="PresentAddress" onkeypress="presentaddresslengthcheck(this)" onclick="clearpresentaddressvalidation()"></textarea>
+                                                    <span id="presentaddresscharacters" class="text-danger"></span>
+                                                    <span id="validatepresentaddress" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-6 mb-3">
+                                                    <label for="PermanentAddress" class="form-label">Permanent Address</label>
+                                                    <textarea asp-for="@Model[row].PermanentAddress" class="form-control" id="PermanentAddress" onkeypress="permanentaddresslengthcheck(this)" onclick="clearpermanentaddressvalidation()"></textarea>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="PermanentAddressCheck" onclick="ChangePermanentAddress()">
+                                                        <label class="form-check-label" for="PermanentAddressCheck">Same as Present Address</label>
+                                                    </div>
+                                                    <span id="permanentaddresscharacters" class="text-danger"></span>
+                                                    <span id="validatepermanentaddress" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <input class="form-control" asp-for="@Model[row].IsPhotoAvailable" readonly hidden />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if (Model[row].QualificationModel.Count() > 0)
+                                        {
+                                            <h4 class="text-center">Qualification Details</h4>
+                                            <div class="row m-3 border rounded-top mt-4 p-0">
+                                                @{
+                                                    int QualificationCount = ViewBag.QualificationCount;
+                                                }
+                                                <p id="QualificationCount" style="display: none">@QualificationCount</p>
+                                                @for (var qualificationrow = 0; qualificationrow < 10; qualificationrow++)
+                                                {
+                                                    <div id="qualificationdiv(@qualificationrow)">
+                                                        <section id="qualificationsection">
+                                                            <div class="row m-3 p-0">
+                                                                <div class="col-3 mb-3">
+                                                                    <label for="Qualification1" class="form-label">Type of Qualification</label>
+                                                                    <select asp-for="@Model[row].QualificationModel[qualificationrow].Qualification1" class="form-control" id="Qualification1(@qualificationrow)" onchange="ConfigureQualification(this, document.getElementById('Qualification2(@qualificationrow)'),@qualificationrow)" onclick="clearqualification1validation(@qualificationrow)">
+                                                                       <option value="Null" selected>Please Select Qualification</option>
+                                                                        <option value="SSLC">SSLC</option>
+                                                                        <option value="II PUC">II PUC</option>
+                                                                        <option value="ITI">ITI</option>
+                                                                        <option value="Diploma">Diploma</option>
+                                                                        <option value="Graduation">Graduation</option>
+                                                                        <option value="Post Graduation">Post Graduation</option>
+                                                                        <option value="Doctorates">Doctorates</option>
+                                                                        <option value="Post Doctorates">Post Doctorates</option>
+                                                                    </select>
+                                                                    <span id="validatequalification1(@qualificationrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-3 mb-3" id="QualificationTemp(@qualificationrow)">
+                                                                    <label for="QualificationTemp" class="form-label">Qualification</label>
+                                                                    <input type="text" asp-for="@Model[row].QualificationModel[qualificationrow].QualificationTemp" class="form-control" id="QualificationTemp(@qualificationrow)" readonly>
+                                                                </div>
+                                                                <div class="col-3 mb-3" id="Qualification2Div(@qualificationrow)">
+                                                                    <label for="Qualification2" class="form-label">Qualification</label>
+                                                                    <select asp-for="@Model[row].QualificationModel[qualificationrow].Qualification2" class="form-control" id="Qualification2(@qualificationrow)" onchange="clearqualification2validation(@qualificationrow)" onclick="clearqualification2validation(@qualificationrow)">
+                                                                        <option value="Null" selected>Please Select Qualification</option>
+                                                                    </select>
+                                                                    <span id="validatequalification2(@qualificationrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-3 mb-3">
+                                                                    <label for="Specialization" class="form-label">Specialization</label>
+                                                                    <input type="text" asp-for="@Model[row].QualificationModel[qualificationrow].Specialization" class="form-control" id="Specialization(@qualificationrow)" onchange="clearspecializationvalidation(@qualificationrow)" onclick="clearspecializationvalidation(@qualificationrow)">
+                                                                    <span id="validatespecialization(@qualificationrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-1 mb-3">
+                                                                    <label class="form-label"></label>
+                                                                    <button class="btn btn-primary form-control mt-2 add-button" id="qualificationaddbutton(@qualificationrow)" type="button" onclick="qualificationadd(@qualificationrow)">Add</button>
+                                                                </div>
+                                                                @if (qualificationrow != 0)
+                                                                {
+                                                                    <div class="col-1 mb-3">
+                                                                        <label class="form-label"></label>
+                                                                        <button class="btn btn-primary form-control mt-2 remove-button" id="qualificationremovebutton(@qualificationrow)" type="button" onclick="qualificationremove(@qualificationrow)">Remove</button>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </section>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+
+                                        <div id="emergencyfamilymedicalgratuity">
+                                            @if (Model[row].EmergencyContactModel.Count() > 0)
+                                            {
+                                                <h4 class="text-center">Emergency Contact Details</h4>
+                                                <div class="row m-3 border rounded-top mt-4 p-0">
+                                                    @{
+                                                        int EmergencyCount = ViewBag.EmergencyCount;
+                                                    }
+                                                    <p id="EmergencyCount" style="display: none">@EmergencyCount</p>
+                                                    @for (var emergencyrow = 0; emergencyrow < 10; emergencyrow++)
+                                                    {
+                                                        <div id="emergencydiv(@emergencyrow)">
+                                                            <div class="row m-3 p-0">
+                                                                <div class="col-2" style="display: none">
+                                                                    <label for="EmergencyID" class="form-label">EmergencyID</label>
+                                                                    <input type="Number" asp-for="@Model[row].EmergencyContactModel[emergencyrow].EmergencyID" class="form-control">
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <label for="ContactName" class="form-label">Contact Name</label>
+                                                                    <input type="text" asp-for="@Model[row].EmergencyContactModel[emergencyrow].ContactName" class="form-control" id="EmergencyContactName(@emergencyrow)" onkeypress="clearemergencycontactnamevalidation(@emergencyrow)" onclick="clearemergencycontactnamevalidation(@emergencyrow)">
+                                                                    <span id="validateemergencycontactname(@emergencyrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <label for="LandlineNumber" class="form-label">Landline Number</label>
+                                                                    <input type="number" onwheel="this.blur()" asp-for="@Model[row].EmergencyContactModel[emergencyrow].LandlineNumber" class="form-control" id="EmergencyLandlineNumber(@emergencyrow)" onkeypress="clearemergencylandlinenumbervalidation(@emergencyrow)" onclick="clearemergencylandlinenumbervalidation(@emergencyrow)">
+                                                                    <span id="validateemergencylandlinenumber(@emergencyrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <label for="MobilePhoneNumber" class="form-label">Mobile Phone Number</label>
+                                                                    <input type="number" onwheel="this.blur()" asp-for="@Model[row].EmergencyContactModel[emergencyrow].MobilePhoneNumber" class="form-control" id="EmergencyMobilePhoneNumber(@emergencyrow)" onkeypress="clearemergencymobilenumbervalidation(@emergencyrow)" onclick="clearemergencymobilenumbervalidation(@emergencyrow)">
+                                                                    <span id="validateemergencymobilephonenumber(@emergencyrow)" class="text-danger"></span>
+                                                                </div>
+
+                                                                <div class="col-2">
+                                                                    <label for="EmailId" class="form-label">Email Id</label>
+                                                                    <input type="email" asp-for="@Model[row].EmergencyContactModel[emergencyrow].EmailId" class="form-control" id="EmergencyEmailId(@emergencyrow)" onkeypress="clearemergencyemailidvalidation(@emergencyrow)" onclick="clearemergencyemailidvalidation(@emergencyrow)">
+                                                                    <span id="validateemergencyemailid(@emergencyrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <label for="Relation" class="form-label">Relation</label>
+                                                                    <input type="text" asp-for="@Model[row].EmergencyContactModel[emergencyrow].Relation" class="form-control" id="EmergencyRelation(@emergencyrow)" onkeypress="clearemergencyrelationvalidation(@emergencyrow)" onclick="clearemergencyrelationvalidation(@emergencyrow)">
+                                                                    <span id="validateemergencyrelation(@emergencyrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-2"></div>
+                                                                <div class="col-1 mb-3">
+                                                                    <label class="form-label"></label>
+                                                                    <button class="btn btn-primary form-control mt-2 add-button" id="emergencyaddbutton(@emergencyrow)" type="button" onclick="emergencyadd(@emergencyrow)">Add</button>
+                                                                </div>
+                                                                @if (emergencyrow != 0)
+                                                                {
+                                                                    <div class="col-1 mb-3">
+                                                                        <label class="form-label"></label>
+                                                                        <button class="btn btn-primary form-control mt-2 remove-button" id="emergencyremovebutton(@emergencyrow)" type="button" onclick="emergencyremove(@emergencyrow)">Remove</button>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                            @if (Model[row].FamilyDeclarationModel.Count() > 0)
+                                            {
+                                                <h4 class="text-center">Family Declaration Details</h4>
+                                                <div class="row m-3 border rounded-top mt-4 p-0">
+                                                    @{
+                                                        int FamilyModelCount = ViewBag.FamilyValueCount;
+                                                    }
+                                                    <p id="FamilyModelCount" style="display: none">@FamilyModelCount</p>
+                                                    @for (var familyrow = 0; familyrow < 10; familyrow++)
+                                                    {
+                                                        <div id="FamilyDeclarationDiv(@familyrow)">
+                                                            <div class="row m-3 p-0">
+                                                                <div class="col-2 mb-3" style="display: none">
+                                                                    <label for="DependentID" class="form-label">DependentID</label>
+                                                                    <input type="Number" onwheel="this.blur()" asp-for="@Model[row].FamilyDeclarationModel[familyrow].DependentID" class="form-control">
+                                                                </div>
+                                                                <div class="col-2 mb-3">
+                                                                    <label for="RelativeName" class="form-label">Relative Name</label>
+                                                                    <input type="text" asp-for="@Model[row].FamilyDeclarationModel[familyrow].RelativeName" class="form-control" id="FamilyRelativeName(@familyrow)" onkeypress="clearfamilyrelativenamevalidation(@familyrow)" onclick="clearfamilyrelativenamevalidation(@familyrow)">
+                                                                    <span id="validatefamilyrelativename(@familyrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-2 mb-3">
+                                                                    <label for="Relation" class="form-label">Relation</label>
+                                                                    <input type="text" asp-for="@Model[row].FamilyDeclarationModel[familyrow].Relation" class="form-control" id="FamilyRelation(@familyrow)" onkeypress="clearfamilyrelationvalidation(@familyrow)" onclick="clearfamilyrelationvalidation(@familyrow)">
+                                                                    <span id="validatefamilyrelation(@familyrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-2 mb-3">
+                                                                    <label for="DateOfBirth" class="form-label">Date Of Birth</label>
+                                                                    <input type="date" asp-for="@Model[row].FamilyDeclarationModel[familyrow].DateOfBirth" class="form-control" id="FamilyDateOfBirth(@familyrow)" onclick="clearfamilydateofbirthvalidation(@familyrow)">
+                                                                    <span id="validatefamilydateofbirth(@familyrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-2 mb-3">
+                                                                    <label for="Category" class="form-label">Category</label>
+                                                                    <select asp-for="@Model[row].FamilyDeclarationModel[familyrow].IsDependent" class="form-control" id="IsDependent(@familyrow)" onchange="clearisdependentvalidation(@familyrow)" onclick="clearisdependentvalidation(@familyrow)">
+                                                                        <option value="-1">Please Select Category</option>
+                                                                        <option value="1">Dependent</option>
+                                                                        <option value="0">Non Dependent</option>
+                                                                    </select>
+                                                                    <span id="validateisdependent(@familyrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-1 mb-3">
+                                                                    <label class="form-label"></label>
+                                                                    <button class="btn btn-primary form-control mt-2 add-button" id="familydeclarationaddbutton(@familyrow)" type="button" onclick="familydeclarationadd(@familyrow)">Add</button>
+                                                                </div>
+                                                                <div class="col-1 mb-3">
+                                                                    <label class="form-label"></label>
+                                                                    <button class="btn btn-primary form-control mt-2 remove-button" id="familydeclarationremovebutton(@familyrow)" type="button" onclick="familydeclarationremove(@familyrow)">Remove</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                            @if (Model[row].MedicalDependentsModel.Count() > 0)
+                                            {
+                                                <h4 class="text-center">Medical Dependents Details</h4>
+                                                <div class="row m-3 border rounded-top mt-4 p-0">
+                                                    @{
+                                                        int MedicalModelCount = ViewBag.MedicalValueCount;
+                                                    }
+                                                    <p id="MedicalModelCount" style="display: none">@MedicalModelCount</p>
+                                                    @for (var medicalrow = 0; medicalrow < 10; medicalrow++)
+                                                    {
+                                                        <div id="MedicalDependentsDiv(@medicalrow)">
+                                                            <div class="row m-3 p-0">
+                                                                <div class="col-3 mb-3" style="display: none">
+                                                                    <label for="DependentID" class="form-label">Dependent ID</label>
+                                                                    <input type="number" onwheel="this.blur()" asp-for="@Model[row].MedicalDependentsModel[medicalrow].DependentID" class="form-control">
+                                                                </div>
+                                                                <div class="col-2 mb-3">
+                                                                    <label for="RelativeName" class="form-label">Dependent Name</label>
+                                                                    <input type="text" asp-for="@Model[row].MedicalDependentsModel[medicalrow].DependentName" class="form-control" id="MedicalDependentName(@medicalrow)" onkeypress="clearmedicaldependentnamevalidation(@medicalrow)" onclick="clearmedicaldependentnamevalidation(@medicalrow)">
+                                                                    <span id="validatemedicaldependentname(@medicalrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-2 mb-3">
+                                                                    <label for="Relation" class="form-label">Relation</label>
+                                                                    <input type="text" asp-for="@Model[row].MedicalDependentsModel[medicalrow].Relation" class="form-control" id="MedicalRelation(@medicalrow)" onkeypress="clearmedicalrelationvalidation(@medicalrow)" onclick="clearmedicalrelationvalidation(@medicalrow)">
+                                                                    <span id="validatemedicalrelation(@medicalrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-2 mb-3">
+                                                                    <label for="DateOfBirth" class="form-label">Date Of Birth</label>
+                                                                    <input type="date" asp-for="@Model[row].MedicalDependentsModel[medicalrow].DateOfBirth" class="form-control" id="MedicalDateOfBirth(@medicalrow)" onclick="clearmedicaldateofbirthvalidation(@medicalrow)">
+                                                                    <span id="validatemedicaldateofbirth(@medicalrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-1 mb-3">
+                                                                    <label class="form-label"></label>
+                                                                    <button class="btn btn-primary form-control mt-2 add-button" id="medicaldependentsaddbutton(@medicalrow)" type="button" onclick="medicaldependentsadd(@medicalrow)">Add</button>
+                                                                </div>
+                                                                <div class="col-1 mb-3">
+                                                                    <label class="form-label"></label>
+                                                                    <button class="btn btn-primary form-control mt-2 remove-button" id="medicaldependentsremovebutton(@medicalrow)" type="button" onclick="medicaldependentsremove(@medicalrow)">Remove</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                            @if (Model[row].GratuityModel.Count() > 0)
+                                            {
+                                                <h4 class="text-center">Gratuity Details</h4>
+                                                <div class="row m-3 border rounded-top mt-4 p-0">
+                                                    @{
+                                                        int GratuityModelCount = ViewBag.GratuityValueCount;
+                                                    }
+                                                    <p id="GratuityModelCount" style="display: none">@GratuityModelCount</p>
+                                                    @for (var gratuityrow = 0; gratuityrow < 10; gratuityrow++)
+                                                    {
+                                                        <div id="GratuityDiv(@gratuityrow)">
+                                                            <div class="row m-3 p-0">
+                                                                <div class="col-3 mb-3" style="display: none">
+                                                                    <label for="NomineeID" class="form-label">Nominee ID</label>
+                                                                    <input type="number" onwheel="this.blur()" asp-for="@Model[row].GratuityModel[gratuityrow].NomineeID" class="form-control">
+                                                                </div>
+                                                                <div class="col-3 mb-3" style="display: none">
+                                                                    <label for="StaffNumber" class="form-label">Staff Number</label>
+                                                                    <input type="number" onwheel="this.blur()" asp-for="@Model[row].GratuityModel[gratuityrow].StaffNumber" class="form-control" readonly>
+                                                                </div>
+                                                                <div class="col-3 mb-3">
+                                                                    <label for="NomineeName" class="form-label">Nominee Name</label>
+                                                                    <input type="text" asp-for="@Model[row].GratuityModel[gratuityrow].NomineeName" class="form-control" id="GratuityNomineeName(@gratuityrow)" onkeypress="cleargratuitynomineenamevalidation(@gratuityrow)" onclick="cleargratuitynomineenamevalidation(@gratuityrow)">
+                                                                    <span id="validategratuitynomineename(@gratuityrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-3 mb-3">
+                                                                    <label for="Relation" class="form-label">Percentage</label>
+                                                                    <input type="number" onwheel="this.blur()" asp-for="@Model[row].GratuityModel[gratuityrow].Percentage" class="form-control" id="GratuityPercentage(@gratuityrow)" onkeypress="cleargratuitypercentagevalidation(@gratuityrow)" onclick="cleargratuitypercentagevalidation(@gratuityrow)">
+                                                                    <span id="validategratuitypercentage(@gratuityrow)" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-1 mb-3">
+                                                                    <label class="form-label"></label>
+                                                                    <button class="btn btn-primary form-control mt-2 add-button" id="gratuityaddbutton(@gratuityrow)" type="button" onclick="gratuityadd(@gratuityrow)">Add</button>
+                                                                </div>
+                                                                <div class="col-1 mb-3">
+                                                                    <label class="form-label"></label>
+                                                                    <button class="btn btn-primary form-control mt-2 remove-button" id="gratuityremovebutton(@gratuityrow)" type="button" onclick="gratuityremove(@gratuityrow)">Remove</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="row m-3 border rounded-top mt-4 p-0">
+                                            <div>
+                                                <div class="row m-2 p-0">
+                                                    <div class="col-3 mb-3">
+                                                        <label for="UserImage">Upload Staff Photo</label>
+                                                        <input type="file" class="form-control" name="userimage" id="UserImage" onclick="clearuserimagevalidation()">
+                                                        <span id="validateuserimage" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="m-3 border rounded-top mt-4 p-0">
+                                            <div class="row m-3 p-0">
+                                                <div class="col-4 mb-3" style="display:none">
+                                                    <label for="Status" class="form-label">Status</label>
+                                                    <input type="text" asp-for="@Model[row].Status" value="P" class="form-control">
+                                                    <span id="validatestatus" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-4 mb-3" style="display:none">
+                                                    <label for="Remarks" class="form-label">UserImagePath</label>
+                                                    <textarea asp-for="@Model[row].UserImagePath" class="form-control" readonly></textarea>
+                                                </div>
+                                                <div class="col-4 mb-3">
+                                                    <label for="Remarks" class="form-label">Admin Remarks</label>
+                                                    <textarea asp-for="@Model[row].Remarks" class="form-control" id="Remarks" onkeypress="clearremarksvalidation()" onclick="clearremarksvalidation()"></textarea>
+                                                    <span id="validateremarks" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <button type="submit" class="btn btn-primary px-5 mt-2" onclick="return validateForm()">Submit</button>
+                        <a class="btn btn-primary  px-5 mt-2 ml-4" href="@Url.Action("EmployeeSearch","Admin")">Go Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/admin/edit-employee-data.js"></script>
