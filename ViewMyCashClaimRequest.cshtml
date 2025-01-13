@@ -1,0 +1,200 @@
+﻿@using Digitalization.Models.UserModel
+@model List<OverTimeModel> 
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("OverTimeCashClaim","User")" style="text-decoration: none">OverTimeCashClaim</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("MyCashClaimRequestWithoutFilter","User")" style="text-decoration: none">MyCashClaimRequest</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">ViewMyCashClaimRequest</li>
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">View My Cash Claim  Request</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+                        <hr>
+                        <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="ViewMyCashClaimRequest" class="m-4 pb-5" name="request-form">
+                            @if(Model != null)
+                            {
+                                bool flag = true;
+
+                                @for (var row = 0; row < Model.Count(); row++)
+                                {
+                                    @if(flag)
+                                    {
+                                        flag = false;
+
+                                        <div class="tab-content">
+                                            <div class="" id="userdetails">
+                                                <div class="row"> 
+                                                    <!-- hidden fields start -->
+                                                    <div class="row m-1 border rounded-top mt-4 p-3" style="display: none">
+                                                        <div class="row">
+                                                             <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="ApplyingOn" class="form-label">Applied For</label>
+                                                                <input type="text" asp-for="@Model[row].ApplyingOn" class="form-control" id="ApplyingOn" readonly>
+                                                             </div>
+                                                             <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="FromTime" class="form-label">From Time</label>
+                                                                <input type="text" asp-for="@Model[row].FromTime" class="form-control" id="FromTime" readonly>
+                                                             </div>
+                                                             <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="ToTime" class="form-label">To Time</label>
+                                                                <input type="text" asp-for="@Model[row].ToTime" class="form-control" id="ToTime" readonly>
+                                                             </div>
+                                                        </div>                                            
+                                                    </div>
+                                                    <!-- hidden fields end -->
+                                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                                        <div class="row">                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="CashClaimID" class="form-label">CashClaim ID</label>
+                                                                <input type="text" asp-for="@Model[row].CashClaimID" class="form-control" id="CashClaimID" readonly>
+                                                            </div>                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="OverTimeID" class="form-label">OverTime ID</label>
+                                                                <input type="text" asp-for="@Model[row].OverTimeID" class="form-control" id="OverTimeID" readonly>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="AppliedOn" class="form-label">Applied On</label>
+                                                                <input type="text" asp-for="@Model[row].CashClaimRaisedDateTime" class="form-control" id="CashClaimRaisedDateTime" readonly>
+                                                            </div>
+                                                        </div>                                            
+                                                    </div>
+                                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                                        <div class="row">                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="StaffNumber" class="form-label">StaffNumber</label>
+                                                                <input type="text" asp-for="@Model[row].StaffNumber" class="form-control" id="StaffNumber" readonly>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="Name" class="form-label">Name</label>
+                                                                <input type="text" asp-for="@Model[row].StaffName" class="form-control" id="Name" readonly>
+                                                            </div>
+                                                             <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="Designation" class="form-label">Designation</label>
+                                                                <input type="text" asp-for="@Model[row].Designation" class="form-control" id="Designation" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="GroupName" class="form-label">Group Name</label>
+                                                                <input type="text" asp-for="@Model[row].GroupName" class="form-control" id="GroupName" readonly>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="CenterName" class="form-label">Center Name</label>
+                                                                <input type="text" asp-for="@Model[row].CenterName" class="form-control" id="CenterName" readonly>
+                                                            </div>
+                                                        </div>        
+                                                    </div>
+                                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                                        <h5 class="text-center mt-4 text-primary">OverTime Details</h5>
+                                                        <div class="row">                                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="AlternateAppliedFor" class="form-label">Date</label>
+                                                                <input type="text" asp-for="@Model[row].AlteredApplyingOnDate" class="form-control" id="AlternateAppliedFor" readonly>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="FromTime" class="form-label">From Time</label>
+                                                                <input type="text" asp-for="@Model[row].AlternateFromTime" class="form-control" id="FromTime" readonly>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="ToTime" class="form-label">To Time</label>
+                                                                <input type="text" asp-for="@Model[row].AlternateToTime" class="form-control" id="ToTime" readonly>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="TotalDuration" class="form-label">Total Duration</label>
+                                                                <input type="text" asp-for="@Model[row].TotalTime" class="form-control" id="TotalDuration" readonly>
+                                                            </div>
+                                                        </div>        
+                                                    </div>
+                                                    @if (@Model[row].OldStatus != "CANCELLED" && @Model[row].OldStatus != "REJECTED")
+                                                    {
+                                                         <div class="row m-1 border rounded-top p-3 mt-4">
+                                                         <div class="row">                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="NewStatus" class="form-label">Status</label>
+                                                                <select class="form-control" id="NewStatus" asp-for="@Model[row].NewStatus" onchange="clearstatusvalidation()" onclick="clearstatusvalidation()">
+                                                                    <option value="Null">Please Select Status</option>
+                                                                    <option value="CANCELLED">CANCELLED</option>
+                                                                </select>
+                                                                <span id="validatestatus" class="text-danger"></span>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="NewRemarks" class="form-label">Remarks</label>
+                                                                <textarea class="form-control" id="NewRemarks" asp-for="@Model[row].NewRemarks" onkeypress="clearremarksvalidation()" onclick="clearremarksvalidation()"></textarea>
+                                                                <span id="validatenewremarks" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                    
+                                                </div>
+                                                
+                                                @if (@Model[row].OldStatus != "CANCELLED" && @Model[row].OldStatus != "REJECTED")
+                                                {
+                                                    <button type="submit" onclick="return validateForm()" class="btn btn-primary px-5 mt-2 float-end" id="SubmitButton">Submit</button>
+                                                }
+                                                <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("MyCashClaimRequestWithoutFilter","User")">Go Back</a>
+
+                                            </div>
+                                            <h5 class="text-center mt-4 text-primary">Status</h5>
+                                            <div class="m-1 border rounded-top mt-4 p-3">
+                                                @foreach (var overtime in Model)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                            <label for="Status" class="form-label">Status</label>
+                                                            <input type="text" asp-for="@overtime.OldStatus" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                            <label for="StaffNumber" class="form-label">Staff Number</label>
+                                                            <input type="text" asp-for="@overtime.ActionTakenByStaffNumber" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                            <label for="FirstName" class="form-label">Name</label>
+                                                            <input type="text" asp-for="@overtime.ActionTakenByName" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                            <label for="Designation" class="form-label">Designation</label>
+                                                            <input type="text" asp-for="@overtime.ActionTakenByDesignation" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-5 col-md-6 mb-3">
+                                                            <label for="Date" class="form-label">Date</label>
+                                                            <input type="text" asp-for="@overtime.DateTime" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-4 col-lg-4 col-md-4 mb-3">
+                                                            <label for="Remarks" class="form-label">Remarks</label>
+                                                            <textarea class="form-control" asp-for="@overtime.OldRemarks" readonly></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <hr />
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/user/view-my-overtime-request.js"></script>

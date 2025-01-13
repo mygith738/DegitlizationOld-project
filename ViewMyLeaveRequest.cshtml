@@ -1,0 +1,323 @@
+﻿@using Digitalization.Models.UserModel
+@model List<LeaveModel> 
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Home","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("Leave","User")" style="text-decoration: none">Leave</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("MyLeaveRequestWithoutFilter","User")" style="text-decoration: none">MyLeaveRequest</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">ViewMyLeaveRequest</li>
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">View My Leave Request</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+                        <hr>
+                        <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="ViewMyLeaveRequest" class="m-4 pb-5" name="request-form">
+                            @if(Model != null)
+                            {
+                                bool flag = true;
+
+                                @for (var row = 0; row < Model.Count(); row++)
+                                {
+                                    @if(flag)
+                                    {
+                                        flag = false;
+
+                                        <div class="tab-content">
+                                            <div class="" id="userdetails">
+                                                <div class="row"> 
+                                                    <!-- hidden fields start -->
+                                                    <div class="row m-1 border rounded-top mt-4 p-3" style="display: none">
+                                                        <div class="row">                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3" style="display: none">
+                                                                <label for="Attachment" class="form-label">Attachment</label>
+                                                                <input type="text" asp-for="@Model[row].AttchmentLocation" class="form-control" id="Attachment" readonly>
+                                                            </div>
+                                                        </div>                                            
+                                                    </div>
+                                                    <!-- hidden fields end -->
+                                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                                        <div class="row">                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="LeaveID" class="form-label">Leave ID</label>
+                                                                <input type="text" asp-for="@Model[row].LeaveID" class="form-control" id="LeaveID" readonly>
+                                                            </div>
+                                                            @if(@Model[row].TypeOfLeave == "CO")
+                                                            {
+                                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                    <label for="OverTimeID" class="form-label">OverTime ID</label>
+                                                                    <input type="text" asp-for="@Model[row].OverTimeID" class="form-control" id="OverTimeID" readonly>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3" style="display: none">
+                                                                    <label for="OverTimeID" class="form-label">OverTime ID</label>
+                                                                    <input type="text" asp-for="@Model[row].OverTimeID" class="form-control" id="OverTimeID" readonly>
+                                                                </div>
+                                                            }
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="AppliedOn" class="form-label">Applied On</label>
+                                                                <input type="text" asp-for="@Model[row].LeaveRaisedDateTime" class="form-control" id="AppliedOn" readonly>
+                                                            </div>
+                                                        </div>                                            
+                                                    </div>
+                                                     <div class="row m-1 border rounded-top mt-4 p-3">
+                                                        <div class="row">                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="StaffNumber" class="form-label">StaffNumber</label>
+                                                                <input type="text" asp-for="@Model[row].StaffNumber" class="form-control" id="StaffNumber" readonly>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="Name" class="form-label">Name</label>
+                                                                <input type="text" asp-for="@Model[row].StaffFirstName" class="form-control" id="Name" readonly>
+                                                            </div>
+                                                             <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="Designation" class="form-label">Designation</label>
+                                                                <input type="text" asp-for="@Model[row].StaffDesignation" class="form-control" id="Designation" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="GroupName" class="form-label">Group Name</label>
+                                                                <input type="text" asp-for="@Model[row].GroupName" class="form-control" id="GroupName" readonly>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="CenterName" class="form-label">Center Name</label>
+                                                                <input type="text" asp-for="@Model[row].CenterName" class="form-control" id="CenterName" readonly>
+                                                            </div>
+                                                        </div>        
+                                                    </div>
+                                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                                        <div class="row">                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3" style="display: none">
+                                                                <label for="LeaveType" class="form-label">Leave Type</label>
+                                                                <input type="text" asp-for="@Model[row].TypeOfLeave" class="form-control" id="LeaveType" readonly>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="LeaveType" class="form-label">Leave Type</label>
+                                                                @if(@Model[row].TypeOfLeave == "CL")
+                                                                {
+                                                                    <input type="text" value="Casual Leave with full pay" class="form-control" id="LeaveType" readonly>
+                                                                }
+                                                                else if(@Model[row].TypeOfLeave == "EL")
+                                                                {
+                                                                    <input type="text" value="Earned Leave with full pay" class="form-control" id="LeaveType" readonly>
+                                                                }
+                                                                else if(@Model[row].TypeOfLeave == "HL")
+                                                                {
+                                                                    <input type="text" value="Half Pay Leave with full pay" class="form-control" id="LeaveType" readonly>
+                                                                }
+                                                                else if(@Model[row].TypeOfLeave == "RH")
+                                                                {
+                                                                    <input type="text" value="Restricted Leave with full pay" class="form-control" id="LeaveType" readonly>
+                                                                }
+                                                                else if(@Model[row].TypeOfLeave == "ML")
+                                                                {
+                                                                    <input type="text" value="Maternity Leave" class="form-control" id="LeaveType" readonly>
+                                                                }
+                                                                else if(@Model[row].TypeOfLeave == "SL")
+                                                                {
+                                                                    <input type="text" value="Special Leave" class="form-control" id="LeaveType" readonly>
+                                                                }
+                                                                else if(@Model[row].TypeOfLeave == "LWP")
+                                                                {
+                                                                    <input type="text" value="Leave without Pay" class="form-control" id="LeaveType" readonly>
+                                                                }
+                                                                else if(@Model[row].TypeOfLeave == "EOL")
+                                                                {
+                                                                    <input type="text" value="Extraordinary Leave" class="form-control" id="LeaveType" readonly>
+                                                                }
+                                                                else if(@Model[row].TypeOfLeave == "OOD")
+                                                                {
+                                                                    <input type="text" value="Official Office Duty" class="form-control" id="LeaveType" readonly>
+                                                                }
+                                                                else if(@Model[row].TypeOfLeave == "CO")
+                                                                {
+                                                                    <input type="text" value="Compensatory Off" class="form-control" id="LeaveType" readonly>
+                                                                }
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="LeaveFrom" class="form-label">Leave From</label>
+                                                                <input type="text" asp-for="@Model[row].LeaveFrom" class="form-control" id="LeaveFrom" readonly>
+                                                            </div>
+                                                            @if(@Model[row].FromHalf == "Null")
+                                                            {
+                                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3" style="display: none">
+                                                                    <label for="FromHalf" class="form-label">From Half</label>
+                                                                    <input type="text" asp-for="@Model[row].FromHalf" class="form-control" id="FromHalf" readonly>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                    <label for="FromHalf" class="form-label">From Half</label>
+                                                                    <input type="text" asp-for="@Model[row].FromHalf" class="form-control" id="FromHalf" readonly>
+                                                                </div>
+                                                            }
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="LeaveTo" class="form-label">LeaveTo</label>
+                                                                <input type="text" asp-for="@Model[row].LeaveTo" class="form-control" id="LeaveTo" readonly>
+                                                            </div>
+                                                            @if(@Model[row].ToHalf == "Null")
+                                                            {
+                                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3" style="display: none">
+                                                                    <label for="ToHalf" class="form-label">To Half</label>
+                                                                    <input type="text" asp-for="@Model[row].ToHalf" class="form-control" id="ToHalf" readonly>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                    <label for="ToHalf" class="form-label">To Half</label>
+                                                                    <input type="text" asp-for="@Model[row].ToHalf" class="form-control" id="ToHalf" readonly>
+                                                                </div>
+                                                            }
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="NoOfDays" class="form-label">Number Of Days</label>
+                                                                <input type="text" asp-for="@Model[row].TotalLeave" class="form-control" id="NoOfDays" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">                                               
+                                                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mb-3">
+                                                                <label for="Address" class="form-label">Address</label>
+                                                                <textarea asp-for="@Model[row].AddresOnLeave" class="form-control" id="Address" readonly></textarea>
+                                                            </div>
+                                                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mb-3">
+                                                                <label for="Reason" class="form-label">Reason</label>
+                                                                <textarea asp-for="@Model[row].Reason" class="form-control" id="Reason" readonly></textarea>
+                                                            </div>
+                                                             <div class="col-md-6 col-lg-6 col-sm-6 col-6 mb-3">
+                                                                <label for="Remarks" class="form-label">Remarks</label>
+                                                                <textarea asp-for="@Model[row].OldRemarks" class="form-control" id="Remarks" readonly></textarea>
+                                                            </div>                                              
+                                                           @if (@ViewBag.IsAttachementPresent == true)
+                                                            {
+                                                                string ID = @Model[row].LeaveID + "-" + @Model[row].OldStatus;
+                                                                <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                                    <label for="Attachment" class="form-label">Attachment</label>
+                                                                    <a class="form-control" style="text-decoration: none" href="@Model[row].AlteredAttchmentLocation" download="@ID" target="_blank" readonly>Download</a>
+                                                                </div>
+                                                            }
+                                                        </div>        
+                                                    </div>
+                                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                                        <h5 class="text-primary text-center">Reporting Officer</h5>
+                                                         <div class="row">                                               
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="ActionTakenByStaffNumber" class="form-label">StaffNumber</label>
+                                                                <input type="text" asp-for="@Model[row].ReportingOfficer" class="form-control" id="ActionTakenByStaffNumber" readonly>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="ActionTakenByName" class="form-label">Name</label>
+                                                                <input type="text" asp-for="@Model[row].ReportingOfficerName" class="form-control" id="ActionTakenByName" readonly>
+                                                            </div>
+                                                             <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                                <label for="ActionTakenByDesignation" class="form-label">Designation</label>
+                                                                <input type="text" asp-for="@Model[row].ReportingOfficerDesignation" class="form-control" id="ActionTakenByDesignation" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                                        <h5 class="text-center text-primary">Assigned To</h5>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="RecieverStaffNumber" class="form-label">Staff Number</label>
+                                                            <input type="text" id="RecieverStaffNumber" asp-for="@Model[row].RecieverStaffNumber" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="RecieverName" class="form-label">First Name</label>
+                                                            <input type="text" asp-for="@Model[row].RecieverName" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                            <label for="RecieverName" class="form-label">Designation</label>
+                                                            <input type="text" asp-for="@Model[row].RecieverDesignation" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
+                                                    @if (@Model[row].OldStatus != "SANCTIONED" && @Model[row].OldStatus != "CANCELLED"
+                                                            && @Model[row].OldStatus != "REJECTED")
+                                                    {
+                                                         <div class="row m-1 border rounded-top mt-4 p-3">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                                <label for="IndentStatus" class="form-label">Status</label>
+                                                                <select class="form-control" id="NewStatus" asp-for="@Model[row].NewStatus" onchange="clearstatusvalidation()" onclick="clearstatusvalidation()">
+                                                                    <option value="Null">Please Select Status</option>
+                                                                    <option value="CANCELLED">CANCELLED</option>
+                                                                </select>
+                                                                <span id="validatestatus" class="text-danger"></span>
+                                                            </div>
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                                                                <label for="Remarks" class="form-label">Remarks</label>
+                                                                <textarea class="form-control" id="NewRemarks" asp-for="@Model[row].NewRemarks" onkeypress="clearremarksvalidation()" onclick="clearremarksvalidation()"></textarea>
+                                                                <span id="validatenewremarks" class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                @if (@Model[row].OldStatus != "SANCTIONED" && @Model[row].OldStatus != "CANCELLED"
+                                                            && @Model[row].OldStatus != "REJECTED")
+                                                {
+                                                    <button type="submit" class="btn btn-primary px-5 mt-2 float-end">Submit</button>
+                                                }
+                                                <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("MyLeaveRequestWithoutFilter","User")">Go Back</a>
+                                            </div>
+                                            <h5 class="text-center mt-4 text-primary">Leave Status</h5>
+                                            <div class="m-1 border rounded-top mt-4 p-3">
+                                                @foreach (var leave in Model)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                            <label for="Status" class="form-label">Status</label>
+                                                            <input type="text" asp-for="@leave.OldStatus" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                            <label for="StaffNumber" class="form-label">Staff Number</label>
+                                                            <input type="text" asp-for="@leave.ActionTakenByStaffNumber" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                            <label for="FirstName" class="form-label">Name</label>
+                                                            <input type="text" asp-for="@leave.ActionTakenByName" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                            <label for="Designation" class="form-label">Designation</label>
+                                                            <input type="text" asp-for="@leave.ActionTakenByDesignation" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-5 col-md-6 mb-3">
+                                                            <label for="Date" class="form-label">Date</label>
+                                                            <input type="datetime-local" asp-for="@leave.DateTime" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-xl-4 col-lg-4 col-md-4 mb-3">
+                                                            <label for="Remarks" class="form-label">Remarks</label>
+                                                            <textarea class="form-control" asp-for="@leave.OldRemarks" readonly></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <hr />
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/user/view-my-leave-request.js"></script>

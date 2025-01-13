@@ -1,0 +1,98 @@
+﻿@using Digitalization.Models.UserModel
+@model List<OverTimeModel>
+
+@using Microsoft.AspNetCore.Http;
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<!-- #region datatables files -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<!-- #endregion -->
+
+<!-- #region datatables files -->
+<link rel="stylesheet" type="text/css" href="./assets/DataTables-1.11.5/css/dataTables.dataTables.min.css" />
+<script src="./assets/DataTables-1.11.5/js/jquery.dataTables.min.js"></script>
+<!-- #endregion -->
+
+                
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("OverTimeCashClaim","User")" style="text-decoration: none">OverTimeCashClaim</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">ClaimCash</li>
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">Claim Cash</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+                        <hr> 
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Test</span>
+                        <form method="POST" onsubmit="return validateForm()" action="ClaimCash" class="m-4 pb-5" name="register-form">
+                            <div class="tab-content">
+                                <div class="" id="userdetails">
+                                    <table class="table table-bordered text-center" id="DataTable">
+                                        <thead class="p-3">
+                                            <tr>
+                                                <th scope="col">SL.No.</th>
+                                                <th scope="col">OverTimeID</th>
+                                                <th scope="col">StaffNumber</th>
+                                                <th scope="col">StaffName</th>
+                                                <th scope="col">Applied Date</th>
+                                                <th scope="col">Total Duration</th>
+                                                <th scope="col">Action Taken</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model != null)
+                                            {
+                                                @foreach (var overtime in Model)
+                                                {
+                                                    <tr>
+                                                        <td> @( ((Int32) 1) + @Model.IndexOf(overtime) ) </td>
+                                                        <td>@overtime.OverTimeID</td>
+                                                        <td>@overtime.StaffNumber</td>
+                                                        <td>@overtime.StaffName</td>
+                                                        <td>@overtime.AlteredApplyingOnDate</td>
+                                                        <td>@overtime.TotalTime</td>
+                                                        <td><a class="btn btn-warning" href="@Url.Action("InsertClaimCash","User",new { OverTimeID = overtime.OverTimeID})">ClaimCash</a></td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DataTable').DataTable();
+    });
+</script>

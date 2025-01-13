@@ -1,0 +1,63 @@
+﻿@using Digitalization.Models
+
+@model List<HolidaysModel>
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5">
+                <br><br>
+                <div class="main m-5 p-5">
+                    <h3 class="text-center">Restricted Holidays</h3>
+                    @{
+                        int i = 1;
+                    }
+                    @foreach(var holiday in @Model)
+                    {
+                        <div class="row mt-3">
+                            <div class="col-2">
+                                @if(i==1)
+                                {
+                                    <p class="form-label text-center text-primary"><b>Serial Number</b></p>
+                                }
+                                <input type="text" class="form-control text-center" asp-for="@i" readonly/>
+                            </div>
+                            <div class="col-2">
+                                @if(i==1)
+                                {
+                                    <p class="form-label text-center text-primary"><b>Date</b></p>
+                                }
+                                <input type="text" class="form-control text-center" asp-for="@holiday.Date" readonly/>
+                            </div>
+                            <div class="col-3">
+                                @if(i==1)
+                                {
+                                    <p class="form-label text-center text-primary"><b>Day</b></p>
+                                }
+                                <input type="text" class="form-control text-center" asp-for="@holiday.Day" readonly/>
+                            </div>
+                            <div class="col">
+                                @if(i==1)
+                                {
+                                    <p class="form-label text-center text-primary"><b>Occassion</b></p>
+                                }
+                                <input type="text" class="form-control text-center" asp-for="@holiday.Occassion" readonly/>
+                            </div>
+                        </div>
+                        i++;
+                    }
+                    <div class="mt-3">
+                        <a class="btn btn-primary px-5 mt-2" href="@Url.Action("Home","User")">Go Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

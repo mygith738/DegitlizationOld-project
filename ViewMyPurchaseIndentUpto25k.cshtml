@@ -1,0 +1,250 @@
+﻿@using Digitalization.Models.UserModel
+@model List<PurchaseIndentModelUpto25Model>
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css" />
+
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("PurchaseIndentUpto25k","User")" style="text-decoration: none">PurchaseIndentUpto25k</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("MyPurchaseIndentUpto25kRequestWithoutFilter","User")" style="text-decoration: none">MyPurchaseIndentUpto25k</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("MyPurchaseIndentUpto25kRequest","User")" style="text-decoration: none">MyPurchaseIndentUpto25Request</a></li>                              
+                                @* <li class="breadcrumb-item active" aria-current="page">ViewPendingPurchaseIndentUpto25kRequest</li>*@
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">Indent Form and Certificate for Local Purchase/Fabrication</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger"></span>
+                        <hr>
+
+                        <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="ViewMyPurchaseIndentUpto25k" class="m-4 pb-5" name="register-form">
+                            <div class="tab-content">
+                                @for (var row = 0; row < Model.Count(); row++)
+                                {
+                                    <div class="" id="userdetails">
+                                        <div class="row m-1 border rounded-top p-2">
+                                            <div class="row">
+                                                <div class="col-3 mb-3">
+                                                    <label for="PurchaseIndentID" class="form-label">Purchase Indent ID</label>
+                                                    <input type="text" asp-for="@Model[row].PurchaseIndentID" class="form-control" id="PurchaseIndentID" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="PreparedDateTime" class="form-label">Prepared DateTime</label>
+                                                    <input type="text" asp-for="@Model[row].PreparedDateTime" class="form-control" id="PreparedDateTime" readonly />
+                                                </div>                                            
+                                            </div>
+                                        </div>
+                                        <div class="row m-1 border rounded-top p-2">
+                                            <h4 class="text-center my-3">Indentor Details</h4>
+                                            <div style="display: none">
+                                                <!--hidden field start-->
+                                                <div class="col-3 mb-3">
+                                                    <label for="CenterID" class="form-label">CenterID</label>
+                                                    <input type="text" asp-for="@Model[row].IndentorCenterID" class="form-control" id="CenterID" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="GroupID" class="form-label">GroupID</label>
+                                                    <input type="text" asp-for="@Model[row].IndentorGroupID" class="form-control" id="GroupID" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="TSSAttachmentLocation" class="form-label">TSSAttachmentLocation</label>
+                                                    <input type="text" asp-for="@Model[row].TSSAttachmentLocation" class="form-control" id="TSSAttachmentLocation" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="OldStatus" class="form-label">OldStatus</label>
+                                                    <input type="text" asp-for="@Model[row].OldStatus" class="form-control" id="OldStatus" readonly />
+                                                </div>
+
+                                                <!--hidden field end-->
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-3 mb-3">
+                                                    <label for="StaffNumber" class="form-label">Staff Number</label>
+                                                    <input type="text" asp-for="@Model[row].IndentorStaffNumber" class="form-control" id="StaffNumber" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="Name" class="form-label">Name</label>
+                                                    <input type="text" asp-for="@Model[row].IndentorName" class="form-control" id="Name" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="Designation" class="form-label">Designation</label>
+                                                    <input type="text" asp-for="@Model[row].IndentorDesignation" class="form-control" id="Designation" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-3 mb-3">
+                                                    <label for="Center" class="form-label">Center</label>
+                                                    <input type="text" asp-for="@Model[row].IndentorCenterName" class="form-control" id="Center" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="Groups" class="form-label">Groups</label>
+                                                    <input type="text" asp-for="@Model[row].IndentorGroupName" class="form-control" id="Groups" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row m-1 border rounded-top p-2 mt-3">
+                                            <h4 class="text-center my-3">Material Details</h4>
+                                            <div class="row">
+                                                <div class="col-4 mb-4">
+                                                    <label for="MaterialRequired" class="form-label">Material/Service Required</label>
+                                                    <textarea class="form-control" asp-for="@Model[row].MaterialRequired" id="MaterialRequired" readonly></textarea>
+                                                </div>
+                                                <div class="col-3 mb-4">
+                                                    <label for="Quantity" class="form-label">Material Quantity</label>
+                                                    <input type="text" class="form-control" asp-for="@Model[row].MaterialQuantity" id="MaterialQuantity" readonly />
+                                                </div>
+                                                @if (@Model[row].AlteredTSSAttachmentLocation != null)
+                                                {
+                                                    string TSSID = @Model[row].PurchaseIndentID + "-" + @Model[row].OldStatus;
+                                                    <div class=" col-3 mb-3">
+                                                        <label for="Attachment" class="form-label">Material Certificate</label>
+                                                        <a class="form-control" style="text-decoration: none" href="@Model[row].AlteredTSSAttachmentLocation" download="@TSSID" target="_blank" readonly>Download</a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <div class="row m-1 border rounded-top p-2 mt-3">
+                                            <h4 class="text-center">Project & Amount Details</h4>
+                                            <div class="row">
+                                                <div class="col-3 mb-3">
+                                                    <label for="ProjectNo" class="form-label">Project Type</label>
+                                                    <input type="text" class="form-control" asp-for="@Model[row].ProjectType" id="ProjectNo" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="ProjectNo" class="form-label">Project Number</label>
+                                                    <input type="text" class="form-control" asp-for="@Model[row].ProjectNumber" id="ProjectNo" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="BudgetHead" class="form-label">Budget Head</label>
+                                                    <input type="text" class="form-control" asp-for="@Model[row].BudgetHead" id="BudgetHead" readonly />
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="EstimatedCost" class="form-label">Estimated Cost</label>
+                                                    <input type="text" class="form-control" asp-for="@Model[row].EstimatedCost" id="EstimatedCost" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row m-1 border rounded-top p-2 mt-3">
+                                            <h4 class="text-center">Purchase Details</h4>
+                                            <div class="row">
+                                                <div class="col-3 mb-3">
+                                                    <label for="SupplyforIndentingDepartment" class="form-label">Processed by Purchase/Indenting Department</label>
+                                                    <input type="text" class="form-control" asp-for="@Model[row].ProcessingDepartment" id="SupplyforIndentingDepartment" readonly />
+                                                </div>
+                                                <div class="col-5 mb-3">
+                                                    <label for="SupplyforIndentingOfficer" class="form-label">Possible Source of supply known to the Indenting Officer</label>
+                                                    <textarea class="form-control" asp-for="@Model[row].PossibleSource" id="SupplyforIndentingOfficer" readonly></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row m-1 border rounded-top p-2 mt-3">
+                                            <h4 class="text-center my-3">Reporting Officer</h4>
+                                            <div class="row">
+                                                <div class="col-4 mb-4">
+                                                    <label for="StaffNumber" class="form-label">StaffNumber</label>
+                                                    <input type="text" class="form-control" asp-for="@Model[row].ReportingOfficerStaffNumber" id="ReportingOfficerStaffNumber" readonly />
+                                                </div>
+                                                <div class="col-3 mb-4">
+                                                    <label for="Name" class="form-label">Name</label>
+                                                    <input type="text" class="form-control" asp-for="@Model[row].ReportingOfficerName" id="ReportingOfficerName" readonly />
+                                                </div>
+                                                <div class=" col-3 mb-3">
+                                                    <label for="Designation" class="form-label">Designation</label>
+                                                    <input class="form-control" type="text" asp-for="@Model[row].ReportingOfficerDesignation" id="ReportingOfficerDesignation" name="MaterialAttachment" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                                                                                                                                                                                                                                         
+                                        @if (@Model[row].OldStatus == "RAISED")
+                                        {
+                                            <div class="row m-1 border rounded-top p-2 mt-3">
+                                                <div class="row">
+                                                    <div class="col-3 mb-3">
+                                                        <label for="Status" class="form-label">Status</label>
+                                                        <select class="form-control" asp-for="@Model[row].NewStatus" id="Status" onclick="clearstatusvalidation()" onkeypress="clearstatusvalidation()">
+                                                            <option value="Null">Please select status</option>
+                                                            <option value="CANCELLED">CANCELLED</option>
+                                                        </select>
+                                                        <span id="validatestatus" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-3 mb-3">
+                                                        <label for="Remarks" class="form-label">Remarks</label>
+                                                        <textarea class="form-control" asp-for="@Model[row].NewRemarks" id="Remarks" onclick="clearremarksvalidation()" onkeypress="clearremarksvalidation()"></textarea>
+                                                        <span id="validateremarks" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary float-end px-5 mt-2 mr-2">Submit</button>
+                                        }
+                                        <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("MyPurchaseIndentUpto25kRequestWithoutFilter","User")">Go Back</a>
+
+                                        <!-- within this block -->
+
+                                        <div class="row m-1 border rounded-top p-2 mt-3">
+                                            <h4 class="text-center my-3">Indent Status</h4>
+                                            @foreach (var indent in Model)
+                                            {
+                                                <div class="row">
+                                                    <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                        <label for="Status" class="form-label">Status</label>
+                                                        <input type="text" asp-for="@indent.OldStatus" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                        <label for="StaffNumber" class="form-label">Staff Number</label>
+                                                        <input type="text" asp-for="@indent.ActionTakenByStaffNumber" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                        <label for="FirstName" class="form-label">First Name</label>
+                                                        <input type="text" asp-for="@indent.ActionTakenByName" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-2 col-lg-3 col-md-6 mb-3">
+                                                        <label for="Designation" class="form-label">Designation</label>
+                                                        <input type="text" asp-for="@indent.ActionTakenByDesignation" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="col-xl-3 col-lg-5 col-md-6 mb-3">
+                                                        <label for="Date" class="form-label">Date</label>
+                                                        <input type="datetime-local" asp-for="@indent.DateTime" class="form-control" readonly>
+                                                    </div>
+                                                    @if (indent.OldStatus != "RAISED")
+                                                    {
+                                                        <div class="col-xl-4 col-lg-4 col-md-4 mb-3">
+                                                            <label for="Remarks" class="form-label">Remarks</label>
+                                                            <textarea class="form-control" asp-for="@indent.OldRemarks" readonly></textarea>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <hr />
+                                            }
+                                        </div>
+                                    </div>
+                                    break;
+                                }
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>                             
+
+<script src="~/assets/js/user/view-my-purchase-indent-upto25k.js"></script>

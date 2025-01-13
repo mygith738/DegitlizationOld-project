@@ -1,0 +1,155 @@
+﻿@using Digitalization.Models.UserModel
+@using Microsoft.AspNetCore.Http;
+
+@model OverTimeModel
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("OverTime","User")" style="text-decoration: none">OverTime</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">ApplyOverTime</li>
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">Apply Over Time</h2>
+                        @*<h4 class="text-danger text-center" id="infoerror" style="display: none">Your permission has been exhausted for this month.</h4>*@
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+                        <hr>
+                        <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="RaiseOverTime" class="m-4 pb-5" name="register-form">
+                            <div class="tab-content">
+                                <div class="" id="userdetails">
+                                    <div class="row" id="FormDiv">
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <!-- hidden field starts -->
+                                            <div class="row">
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="GroupID" class="form-label">Group ID</label>
+                                                    <input type="number" asp-for="GroupID" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="CenterID" class="form-label">From Center ID</label>
+                                                    <input type="number" asp-for="CenterID" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="AlternateDate" class="form-label">Applying On</label>
+                                                    <input type="text" id="AlternateDate" asp-for="ApplyingOn" class="form-control"/>
+                                                </div>
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="AlternateFromTime" class="form-label">Applying On</label>
+                                                    <input type="text" id="AlternateFromTime" asp-for="FromTime" class="form-control"/>
+                                                </div>
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="AlternateToTime" class="form-label">Applying On</label>
+                                                    <input type="text" id="AlternateToTime" asp-for="ToTime" class="form-control"/>
+                                                </div>
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="TotalMinutes" class="form-label">Total Minutes</label>
+                                                    <input type="text" id="TotalMinutes"  asp-for="TotalTime" class="form-control"/>
+                                                </div>
+                                            </div>
+                                            <!-- hidden field ends -->
+                                            <div class="row">
+                                                <div class="col-3 mb-3">
+                                                    <label for="StaffNumber" class="form-label">StaffNumber</label>
+                                                    <input type="number" asp-for="StaffNumber" class="form-control" id="StaffNumber" readonly>
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="Name" class="form-label">Name</label>
+                                                    <input type="text" asp-for="StaffName" class="form-control" id="Name" readonly>
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="Designation" class="form-label">Designation</label>
+                                                    <input type="text" asp-for="Designation" class="form-control" id="Designation" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-3 mb-3">
+                                                    <label for="GroupName" class="form-label">Group</label>
+                                                    <input type="text" asp-for="GroupName" class="form-control" id="GroupName" readonly>
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="CenterName" class="form-label">Center</label>
+                                                    <input type="text" asp-for="CenterName" class="form-control" id="CenterName" readonly>
+                                                </div>
+                                                
+                                              <div class="col-3 mb-3">
+                                                    <label>Reporting Officer</label>
+                                                    @if (Model.ReportingOfficerListModel != null)
+                                                    {
+                                                        <select class="form-control" asp-for="ReportingOfficer" id="ReportingOfficer" asp-items="@(new SelectList(Model.ReportingOfficerListModel,"StaffNumber","Name"))" onclick="clearreportingofficervalidation()" onchange="clearreportingofficervalidation()">
+                                                            <option value="Null">Please Select Reporting Officer</option>
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                        <select class="form-control" id="ReportingOfficer" onclick="clearreportingofficervalidation()" onchange="clearreportingofficervalidation()">
+                                                            <option value="Null">Please Select Reporting Officer</option>
+                                                        </select>
+                                                    }
+                                                    <span id="validatereportingofficer" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <div class="row">
+                                                <div class="col-3 mb-3">
+                                                    <label for="Date" class="form-label">Applying On</label>
+                                                    <input type="date" id="Date" class="form-control" onclick="cleardatevalidation()" onchange="cleardatevalidation()"/>
+                                                    <span id="validatedate" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="FromTime" class="form-label">From Time</label>
+                                                    <input type="time" id="FromTime" class="form-control" onclick="clearfromtimevalidation()" onchange="calculateduration()"/>
+                                                    <span id="validatefromtime" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="ToTime" class="form-label">To Time</label>
+                                                    <input type="time" id="ToTime" class="form-control" onclick="cleartotimevalidation()" onchange="calculateduration()"/>
+                                                    <span id="validatetotime" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-3 mb-3">
+                                                    <label for="TotalDuration" class="form-label">Total Time</label>
+                                                    <input type="text" id="TotalDuration" class="form-control"  readonly/>
+                                                    <span id="validatetotalduration" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <div class="row">
+                                                <div class="col-3 mb-3">
+                                                    <label for="Remarks" class="form-label">Remarks</label>
+                                                    <textarea class="form-control" asp-for="NewRemarks" id="Remarks" onclick="clearremarksvalidation()" onkeypress="clearremarksvalidation()"></textarea>
+                                                    <span id="validateremarks" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" id="submitbtn" class="btn btn-primary px-5 mt-2 float-end">Submit</button>
+                                    <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("OverTime","User")">Go Back</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/user/apply-over-time.js"></script>

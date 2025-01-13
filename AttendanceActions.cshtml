@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Http;
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!-- css -->
+<link rel="stylesheet" href="~/assets/css/user/common-landing-pages.css">
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="row ms-5 mb-4">
+                        <div class="row mb-4 border p-3 idrrequest">
+                            <h4>Actions</h4>
+                            <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 mr-3 mt-2">
+                                <div class="box py-3 row hvr-grow-shadow myidrrequest text-center">
+                                     <a href="@Url.Action("Leave","User")" style="text-decoration: none" class="text-black">
+                                        <p>Apply Leave</p>
+                                     </a>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 mr-3 mt-2">
+                                <div class="box py-3 row hvr-grow-shadow myidrrequest text-center">
+                                     <a href="@Url.Action("PermissionSlip","User")" style="text-decoration: none" class="text-black">
+                                        <p>Apply Permission</p>
+                                     </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

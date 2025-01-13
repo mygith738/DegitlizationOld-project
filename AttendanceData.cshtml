@@ -1,0 +1,298 @@
+﻿@using Digitalization.Models.UserModel
+@model List<AttendanceModel>
+
+@using Microsoft.AspNetCore.Http;
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<!-- #region datatables files -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<!-- #endregion -->
+
+<!-- #region datatables files -->
+<link rel="stylesheet" type="text/css" href="./assets/DataTables-1.11.5/css/dataTables.dataTables.min.css" />
+<script src="./assets/DataTables-1.11.5/js/jquery.dataTables.min.js"></script>
+<!-- #endregion -->
+
+                
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Attendance Data</li>
+                            </ol>
+                        </nav>
+                        @*<h2 class="text-center">Apply Leave</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+                        <hr>*@
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Test</span>
+                        <form method="get" onsubmit="return validateForm()" action="AttendanceData" class="m-4 pb-5" name="register-form">
+                            <div class="tab-content">
+                                <div class="tab-content">
+                                    <div>
+                                        @{
+                                            string Fromdate = @ViewBag.FromDate.ToString("yyyy/MM/dd");
+                                            string Todate = @ViewBag.Todate.ToString("yyyy/MM/dd");
+                                        }
+                                        <div class="row mb-5">
+                                            <div class="col-3">
+                                            <label class="from-label">From Date</label>
+                                            <input type="date" value="@Fromdate" name="FromDate" onchange="toggledate()" class="form-control" id="FromDate"/>
+                                            <span class="text-danger" id="validatefromdate"></span>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="from-label">To Date</label>
+                                            <input type="date" value="@Todate" name="ToDate" class="form-control" id="ToDate" />
+                                            <span class="text-danger" id="validatetodate"></span>
+                                        </div>
+                                        <div class="col-3" style="display: none">
+                                            <label class="from-label">StaffNumber</label>
+                                            <input type="number" class="form-control" id="StaffNumber" />
+                                        </div>
+                                        <div class="col-3 mt-4">
+                                            <button type="submit" class="btn btn-primary px-5 mt-2">Submit</button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="" id="userdetails">
+                                        <table class="table table-bordered text-center" id="DataTable">
+                                            <thead class="p-3">
+                                                <tr>
+                                                    <th scope="col">Sl. No.</th>
+                                                    <th scope="col">Date</th>
+                                                    <th scope="col">Day</th>
+                                                    <th scope="col">Punch In</th>
+                                                    <th scope="col">Punch Out</th>
+                                                    <th scope="col">Status</th>
+                                                    @if(@ViewBag.Shift != null)
+                                                    {
+                                                        <th scope="col">Shift</th>
+                                                    }
+                                                    <th scope="col">Action Taken</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (Model.Count() > 0)
+                                                {
+                                                    @foreach (var attendance in Model)
+                                                    {
+                                                        <tr>
+                                                            <td> @( ((Int32) 1) + @Model.IndexOf(attendance) ) </td>
+                                                            <td>@attendance.Date</td>
+                                                            <td>@attendance.Day</td>
+                                                            <td>
+                                                                @attendance.PunchInTime
+                                                            </td>
+                                                            <td>
+                                                                @{
+                                                                    string alternate = "";
+                                                                    if(@attendance.PunchOutTime == "12.00 AM" ||
+                                                                        @attendance.PunchOutTime == "12:00 AM")
+                                                                    {
+                                                                        alternate = "-";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        alternate = @attendance.PunchOutTime;
+                                                                    }
+                                                                }
+                                                                @alternate
+                                                            </td>
+                                                            @{
+                                                                string Color = "";
+
+                                                                TimeSpan eightfourty = TimeSpan.Parse("08:40:59");
+                                                                TimeSpan fivethirty = TimeSpan.Parse("17:29:59");
+                                                                TimeSpan five = TimeSpan.Parse("16:59:59");
+                                                                TimeSpan nine = TimeSpan.Parse("09:00:59");
+
+                                                                TimeSpan ShiftFrom = TimeSpan.Parse("00:00:00");
+                                                                TimeSpan ShiftTo = TimeSpan.Parse("00:00:00");
+
+                                                                if(@attendance.AlternateShiftFrom!=null &&
+                                                                   @attendance.AlternateShiftTo!=null)
+                                                                {
+                                                                    ShiftFrom = TimeSpan.Parse(@attendance.AlternateShiftFrom);
+                                                                    ShiftTo = TimeSpan.Parse(@attendance.AlternateShiftTo);
+                                                                }
+
+                                                                //@if(@attendance.Day == "Saturday" || @attendance.Day == "Sunday")
+                                                                //{
+                                                                //    Color = "Green";
+                                                                //}
+                                                                @if(@attendance.ActionTaken == "Leave Applied" ||
+                                                                    @attendance.ActionTaken == "Permission Applied")
+                                                                {
+                                                                    Color = "Green";
+                                                                }
+                                                                //else if(@attendance.ActionTaken == "CLOSED HOLIDAY")
+                                                                //{
+                                                                //    Color = "Green";
+                                                                //}
+                                                                else 
+                                                                {
+                                                                    if(attendance.AlternatePunchInTime <= eightfourty &&
+                                                                        attendance.AlternatePunchOutTime >= five)
+                                                                    {
+                                                                        Color = "Green";
+                                                                    }
+                                                                    if((attendance.AlternatePunchInTime > eightfourty ||
+                                                                        attendance.AlternatePunchInTime <= nine) &&
+                                                                        attendance.AlternatePunchOutTime >= fivethirty)
+                                                                    {
+                                                                        Color = "Green";
+                                                                    }
+                                                                    if(attendance.AlternatePunchInTime > nine)
+                                                                    {
+                                                                        Color = "Red";
+                                                                    }
+                                                                    if(attendance.AlternatePunchInTime > eightfourty && 
+                                                                        attendance.AlternatePunchOutTime<=fivethirty)
+                                                                    {
+                                                                        Color = "Red";
+                                                                    }
+
+                                                                    // shift based condition
+                                                                    if(@attendance.AlternateShiftFrom!=null &&
+                                                                        @attendance.AlternateShiftTo!=null)
+                                                                    {
+                                                                        if(attendance.AlternatePunchInTime <= ShiftFrom && 
+                                                                            attendance.AlternatePunchOutTime > ShiftTo)
+                                                                        {
+                                                                            Color = "Green";
+                                                                        }
+                                                                        else if(attendance.AlternatePunchInTime > ShiftFrom && 
+                                                                            attendance.AlternatePunchOutTime < ShiftTo)
+                                                                        {
+                                                                            Color = "Red";
+                                                                        }
+                                                                        if(attendance.AlternateDate == attendance.WeeklyOff)
+                                                                        {
+                                                                            Color = "Green";
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            <td>
+                                                                @if(@Color == "Green")
+                                                                {
+                                                                    <a class="btn btn-success">     </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a class="btn btn-danger">      </a>
+                                                                }
+                                                            </td>
+                                                            @if(@ViewBag.Shift != null)
+                                                            {
+                                                                @if(@attendance.Shift != null)
+                                                                {
+                                                                    <td>
+                                                                        @if(@attendance.Shift == "SH1")
+                                                                        {
+                                                                            <a class="btn btn-info text-white">Shift 1</a>
+                                                                        }
+                                                                        else if(@attendance.Shift == "SH2")
+                                                                        {
+                                                                            <a class="btn btn-info text-white">Shift 2</a>
+                                                                        }
+                                                                        else if(@attendance.Shift == "GSH")
+                                                                        {
+                                                                            <a class="btn btn-info text-white">General Shift</a>
+                                                                        }
+                                                                    </td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td>
+                                                                        -
+                                                                    </td>
+                                                                }
+                                                            }
+                                                            <td>
+                                                                @if(@attendance.ActionTaken == "CLOSED HOLIDAY")
+                                                                {
+                                                                    <a class="btn btn-secondary text-white">@attendance.ActionTaken</a>
+                                                                }
+                                                                else if(@attendance.ActionTaken == "RESTRICTED HOLIDAY")
+                                                                {
+                                                                    <a class="btn btn-secondary text-white">@attendance.ActionTaken</a>
+                                                                } 
+                                                                else if(@attendance.Day == "Saturday" || @attendance.Day == "Sunday")
+                                                                {
+                                                                   <a class="btn btn-primary text-white">@attendance.Day</a>
+                                                                }
+                                                                else if(@Color == "Green" && @attendance.ActionTaken == null)
+                                                                {
+                                                                    <span>-</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @if(@attendance.ActionTaken == null)
+                                                                    {
+                                                                        @*<a class="btn btn-warning" href="@Url.Action("AttendanceActions","User")">Action Needed</a>*@
+                                                                        <a class="btn btn-warning" href="#">Action Needed</a>
+                                                                    }
+                                                                    else if(@attendance.ActionTaken == "Leave Applied")
+                                                                    {
+                                                                        @*<a class="btn btn-info text-white" href="@Url.Action("MyLeaveRequestWithoutFilter","User")">@attendance.ActionTaken</a>*@
+                                                                        <a class="btn btn-info text-white" href="#">@attendance.ActionTaken</a>
+                                                                    }
+                                                                    else if(@attendance.ActionTaken == "Permission Applied")
+                                                                    {
+                                                                        @*<a class="btn btn-info text-white" href="@Url.Action("MyPermissionRequestWithoutFilter","User")">@attendance.ActionTaken</a>*@
+                                                                        <a class="btn btn-info text-white" href="#">@attendance.ActionTaken</a>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @*<a class="btn btn-warning" href="@Url.Action("AttendanceActions","User")">Action Needed</a>*@
+                                                                        <a class="btn btn-warning" href="#">Action Needed</a>
+                                                                    }
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/user/attendance.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DataTable').DataTable();
+    });
+
+    $('#DataTable').dataTable( {
+        "pageLength": 50
+      } );
+</script>

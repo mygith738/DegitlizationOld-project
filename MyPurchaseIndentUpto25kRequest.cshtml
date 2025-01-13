@@ -1,0 +1,266 @@
+﻿@using Digitalization.Models.UserModel
+@model List<PurchaseIndentModelUpto25Model>
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<link rel="stylesheet" href="~/assets/css/user/my-request.css" />
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<!-- #region datatables files -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<!-- #endregion -->
+
+<!-- #region datatables files -->
+<link rel="stylesheet" type="text/css" href="./assets/DataTables-1.11.5/css/dataTables.dataTables.min.css" />
+<script src="./assets/DataTables-1.11.5/js/jquery.dataTables.min.js"></script>
+<!-- #endregion -->
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <div class="bs-example">
+                            <nav aria-label="breadcrumb" class="pl-3">
+                                <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("PurchaseIndentUpto25k","User")" style="text-decoration: none">PurchaseIndentUpto25k</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("MyPurchaseIndentUpto25kRequestWithoutFilter","User")" style="text-decoration: none">MyPurchaseIndentUpto25k</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("MyPurchaseIndentUpto25kRequest","User")" style="text-decoration: none">MyPurchaseIndentUpto25Request</a></li>
+                                </ol>
+                            </nav>
+                            <div class="row">
+                                <div class="col-3">
+
+                                    <!-- @*<h5 class="ml-5 mt-2 text-success">@ViewBag.SuccessMessage</h5>*@ -->
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="text-center">My Requests</h2>
+                                    <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                                    <h5 class="text-center text-danger">@ViewBag.ExceptionError</h5>
+                                    <h5 id="ErrorMessage" class="text-center text-danger">@ViewBag.Error</h5>
+                                    @*<h5 class="text-center text-success">@ViewBag.SuccessMessage</h5>*@
+                                </div>
+                                <div class="col-2"></div>
+                                <div class="col-2">
+
+                                </div>
+                            </div>
+                            <hr>
+                            @if (!ViewBag.Search)
+                            {
+                                <form asp-action="MyPurchaseIndentUpto25kRequest" onsubmit="return validateForm()" method="post" name="request-page">
+                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                        <div class="col-3 mb-3">
+                                            <label for="Year" class="form-label">Year</label>
+                                            <select class="form-control" id="Year" name="Year" onchange="clearyearvalidation()" onclick="clearyearvalidation()">
+                                                <option value="Null">Please select Year</option>
+                                            </select>
+                                            <span id="validateyear" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-3 mb-3">
+                                            <label for="Month" class="form-label">Month</label>
+                                            <select class="form-control" id="Month" name="Month" onchange="clearmonthvalidation()" onclick="clearmonthvalidation()">
+                                                <option value="Null">Please select Month</option>
+                                                <option value="0">All</option>
+                                                <option value="1">January</option>
+                                                <option value="2">February</option>
+                                                <option value="3">March</option>
+                                                <option value="4">April</option>
+                                                <option value="5">May</option>
+                                                <option value="6">June</option>
+                                                <option value="7">July</option>
+                                                <option value="8">August</option>
+                                                <option value="9">September</option>
+                                                <option value="10">October</option>
+                                                <option value="11">November</option>
+                                                <option value="12">December</option>
+                                            </select>
+                                            <span id="validatemonth" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-3 mb-3">
+                                            <label for="Status" class="form-label">Status</label>
+                                            <select class="form-control" id="Status" name="Status" onchange="clearstatusvalidation()" onclick="clearstatusvalidation()">
+                                                <option value="null">Please select Status</option>
+                                                <option value="Null">All</option>
+                                                <option value="RAISED">RAISED</option>
+                                                <option value="FORWARDED">FORWARDED</option>
+                                                <option value="APPROVED BY PL">APPROVED BY PL</option>
+                                                <option value="APPROVED">APPROVED</option>
+                                                <option value="STOCK NOT AVAILABLE">STOCK NOT AVAILABLE</option>
+                                                <option value="STOCK AVAILABLE">STOCK AVAILABLE</option>
+                                                <option value="FUND AVAILABLE">FUND AVAILABLE</option>
+                                                <option value="FUND NOT AVAILABLE">FUND NOT AVAILABLE</option>
+                                                <option value="SANCTIONED BY GH [A/C]">SANCTIONED BY GH [A/C]</option>
+                                                <option value="APPROVED BY GH [A/C]">APPROVED BY GH [A/C]</option>
+                                                <option value="APPROVED BY DIRECTOR">APPROVED BY DIRECTOR</option>
+                                                <option value="ASSIGNED FOR PURCHASE">ASSIGNED FOR PURCHASE</option>
+                                                <option value="PR APPROVED BY INDENTOR">PR APPROVED BY INDENTOR</option>
+                                                <option value="WAITING FOR QUOTATION">WAITING FOR QUOTATION</option>
+                                                <option value="PO IS BEING PREPARED">PO IS BEING PREPARED</option>
+                                                <option value="PO IS READY FOR PURCHASE">PO IS READY FOR PURCHASE</option>
+                                                <option value="ACCEPTED BY SECURITY">ACCEPTED BY SECURITY</option>
+                                                <option value="RECEIVED AT STORES">RECEIVED AT STORES</option>
+                                                <option value="COLLECTED BY INDENTOR">COLLECTED BY INDENTOR</option>
+                                                <option value="ITEM GOOD">ITEM GOOD</option>
+                                                <option value="ITEM NOT GOOD">ITEM NOT GOOD</option>
+                                                <option value="BILL GENERATE BY STORES">BILL GENERATE BY STORES</option>
+                                                <option value="CHECKED BY PURCHASE">CHECKED BY PURCHASE</option>
+                                                <option value="SANCTIONED BY A/C GH">SANCTIONED BY A/C GH</option>
+                                                <option value="CLOSED">CLOSED</option>
+                                                <option value="REJECTED">REJECTED</option>                                                              
+                                                <option value="CANCELLED">CANCELLED</option>
+                                            </select>
+                                            <span id="validatestatus" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="m-2">
+                                        <button type="submit" class="btn btn-primary px-5">Search</button>
+                                    </div>
+                                </form>
+                            }
+                            else if (ViewBag.Search)
+                            {
+                                <div class="tab-content">
+                                    <div class="" id="userdetails">
+                                        <table class="table table-bordered text-center" id="DataTable">
+                                            <thead class="p-3">
+                                                <tr>
+                                                    <th scope="col">Sl. No.</th>
+                                                    <th scope="col">Indent ID</th>
+                                                    <th scope="col">Staff Number</th>
+                                                    <th scope="col">Name</th>
+                                                    @*<th scope="col">Designation</th>*@
+                                                    <th scope="col">From Center</th>
+                                                    @*<th scope="col">From Center</th>*@
+                                                    <th scope="col">From Group</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (Model.Count() > 0)
+                                                {
+                                                    @foreach (var indent in Model)
+                                                    {
+                                                        <tr>
+                                                            <td> @( ((Int32) 1) + @Model.IndexOf(indent) ) </td>
+                                                            <td scope="row">@indent.PurchaseIndentID</td>
+                                                            <td>@indent.IndentorStaffNumber</td>
+                                                            <td>@indent.IndentorName</td>
+                                                           @* <td>@indent.SenderDesignation</td>*@
+                                                            <td>@indent.IndentorCenterName</td>
+                                                            @*<td>@indent.FromCenterName</td>*@
+                                                            <td>@indent.IndentorGroupName</td>
+                                                          
+                                                            <td>
+                                                                <a class="btn btn-secondary text-light">@indent.OldStatus</a>
+                                                            </td>
+
+                                                           @* <td>
+                                                                @if (@indent.OldStatus == "RAISED")
+                                                                {
+                                                                    <a class="btn btn-warning text-light">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "FORWARDED")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #5F9EA0">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "APPROVED BY PL")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #008B8B">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "APPROVED")
+                                                                {
+                                                                    <a class="btn btn-info text-light">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "STOCK NOT AVAILABLE")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #2F539B">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "FUND AVAILABLE")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #008000">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "SANCTIONED BY GH [A/C]")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #808000">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "APPROVED BY GH [A/C]")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #757575">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "APPROVED BY DIRECTOR")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #FBE7A1">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "APPROVED FOR PURCHASE")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #A0522D">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "APPROVED BY INDENTOR")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #98AFC7">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "ACCEPTED BY SECURITY")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #F98B88">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "RECEIVED AT STORES")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #F8B88B">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "COLLECTED BY INDENTOR")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #A74AC7">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "BILL GENERATE BY STORES")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #7575CF">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "CHECKED BY PURCHASE")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #CD7F32">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "SANCTIONED BY A/C GH")
+                                                                {
+                                                                    <a class="btn text-light" style="background-color: #6667AB">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "CLOSED")
+                                                                {
+                                                                    <a class="btn btn-success text-light">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "REJECTED")
+                                                                {
+                                                                    <a class="btn btn-danger text-light">@indent.OldStatus</a>
+                                                                }
+                                                                else if (@indent.OldStatus == "CANCELLED")
+                                                                {
+                                                                    <a class="btn btn-danger text-light">@indent.OldStatus</a>
+                                                                }
+                                                            </td>*@
+                                                            <td>
+                                                                <a href="@Url.Action("ViewMyPurchaseIndentUpto25k","User",new { PurchaseIndentID = indent.PurchaseIndentID})" class="btn btn-primary">View</a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/assets/js/user/my-purchase-indentupto25k-request.js"></script>

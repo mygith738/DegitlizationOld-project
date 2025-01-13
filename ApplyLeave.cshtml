@@ -1,0 +1,286 @@
+﻿@using Digitalization.Models.UserModel
+@model LeaveModel
+
+@using Microsoft.AspNetCore.Http;
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("Leave","User")" style="text-decoration: none">Leave</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Apply Leave</li>
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">Apply Leave</h2>
+                        <h4 class="text-center text-danger">@ViewBag.ExceptionError</h4>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+                        <hr>
+                        
+                        <div class="my-5 row">
+                            <div class="col-2"></div>
+                            <div class="col-2"></div>
+                            <div class="col-2">
+                                @{
+                                    var Year = DateTime.Now.Year;
+                                }
+                                <form asp-action="Holidays">
+                                    <input type="text" class="form-control" value="@Year" name="Year" hidden />
+                                    <input type="text" class="form-control" value="CH" name="Type" hidden />
+                                    <button class="btn btn-primary" type="submit">Closed Holidays</button>
+                                </form>
+                            </div>
+                            <div class="col-2">
+                                <form asp-action="Holidays">
+                                    <input type="text" class="form-control" value="@Year" name="Year" hidden />
+                                    <input type="text" class="form-control" value="RH" name="Type" hidden />
+                                    <button class="btn btn-primary" type="submit">Restricted Holidays</button>
+                                </form>
+                            </div>
+                        </div>
+                        <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="ApplyLeave" class="m-4 pb-5" name="register-form">
+                            <div class="tab-content">
+                                <div class="" id="userdetails">
+                                    <div class="row">
+                                        <div class="row m-1 rounded-top mt-4 p-3">
+
+                                            <table class="table-bordered text-center">
+                                                <tr class="py-3">
+                                                    <th>Type Of Leave</th>
+                                                    <th>Remaining Leave</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>Casual Leave with full pay</td>
+                                                    <td><span id="RemainingCasualLeave">@ViewBag.CasualLeaveCount</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Compensatory Off</td>
+                                                    <td><span id="RemainingCompensatoryOff">@ViewBag.CompensatoryOffCount</span></td>
+                                                </tr>
+                                                @if (@HttpContextAccessor.HttpContext.Session.GetString("EmployeeType") != null &&
+                                                        @HttpContextAccessor.HttpContext.Session.GetString("EmployeeType") != "" &&
+                                                        @HttpContextAccessor.HttpContext.Session.GetString("EmployeeType") == "Regular")
+                                                {
+                                                    <tr>
+                                                        <td>Earned leave with full pay</td>
+                                                        <td><span id="RemainingEarned">@ViewBag.EarnedLeaveCount</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Half Pay leave/Commuted leave</td>
+                                                        <td><span id="RemainingHalfPay">@ViewBag.HalfPayLeaveCount</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Restricted leave</td>
+                                                        <td><span id="RemainingRestricted">@ViewBag.RestrictedLeaveCount</span></td>
+                                                    </tr>
+                                                }
+                                            </table>
+                                        </div>
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <div class="row">
+                                                <!-- hidden field start-->
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="FromGroupID" class="form-label">From Group ID</label>
+                                                    <input type="text" asp-for="GroupID" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="FromCenterID" class="form-label">From Center ID</label>
+                                                    <input type="text" asp-for="CenterID" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="LeaveFrom" class="form-label">Leave From</label>
+                                                    <input type="text" asp-for="LeaveFrom" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="LeaveTo" class="form-label">Leave To</label>
+                                                    <input type="text" asp-for="LeaveTo" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-3 mb-3" style="display: none">
+                                                    <label for="EntryLevel" class="form-label">Entry Level</label>
+                                                    <input type="text" asp-for="EntryLevel" id="EntryLevel" class="form-control" readonly>
+                                                </div>
+                                                <!-- hidden field end-->
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="StaffNumber" class="form-label">Staff Number</label>
+                                                    <input type="text" asp-for="StaffNumber" class="form-control" id="StaffNumber" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="StaffFirstName" class="form-label">Name</label>
+                                                    <input type="text" asp-for="StaffFirstName" class="form-control" id="StaffFirstName" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="GroupName" class="form-label">Group Name</label>
+                                                    <input type="text" asp-for="GroupName" id="GroupName" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                    <label for="CenterName" class="form-label">Center Name</label>
+                                                    <input type="text" asp-for="CenterName" class="form-control" id="CenterName" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                    <label for="TypeOfLeave" class="form-label">Leave Type</label>
+                                                    <select class="form-control" asp-for="TypeOfLeave" id="TypeOfLeave" onclick="togglehalfday()" onchange="togglehalfday()">
+                                                        <option value="Null">Please Select Type</option>
+                                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("EmployeeType") != null &&
+                                                        @HttpContextAccessor.HttpContext.Session.GetString("EmployeeType") != "" &&
+                                                        @HttpContextAccessor.HttpContext.Session.GetString("EmployeeType") == "Regular")
+                                                        {
+                                                            <option value="CL">Casual leave with full pay</option>
+                                                            <option value="CO">Componsatory Off</option>
+                                                            @if(@ViewBag.JoingDateDifference > 180)
+                                                            {
+                                                                <option value="EL">Earned leave with full pay</option>
+                                                            }
+                                                            <option value="HL">Half pay leave/Commuted leave</option>
+                                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("Gender") != null &&
+                                                                @HttpContextAccessor.HttpContext.Session.GetString("Gender") != "" &&
+                                                                @HttpContextAccessor.HttpContext.Session.GetString("Gender") == "Female" &&
+                                                                @HttpContextAccessor.HttpContext.Session.GetString("MaritalStatus") != null &&
+                                                                @HttpContextAccessor.HttpContext.Session.GetString("MaritalStatus") != "" &&
+                                                                @HttpContextAccessor.HttpContext.Session.GetString("MaritalStatus") == "Married")
+                                                            {
+                                                                <option value="ML">Maternity leave</option>
+                                                            }
+                                                            <option value="OOD">Official Office Duty</option>
+                                                            <option value="RH">Restricted holidays</option>
+                                                            <option value="SL">Special leave</option>
+                                                            @if(@ViewBag.CasualLeaveCount == 0 && @ViewBag.EarnedLeaveCount==0 
+                                                                && @ViewBag.HalfPayLeaveCount==0)
+                                                            {
+                                                                <option value="LWP">Leave Without Pay</option>
+                                                                <option value="EOL">Extraordinary leave</option>
+                                                            }
+                                                        }
+                                                        else
+                                                        {                                                            
+                                                            <option value="CL">Casual leave with full pay</option>
+                                                            <option value="CO">Componsatory Off</option>
+                                                            @if(@ViewBag.CasualLeaveCount == 0)
+                                                            {
+                                                                <option value="LWP">Leave Without Pay</option>
+                                                            }
+                                                            <option value="OOD">Official Office Duty</option>
+                                                        }
+                                                    </select>
+                                                    <span id="validatetypeofleave" class="text-danger"></span>
+                                                </div>
+                                                @*<div class="col-xl-3 col-lg-4 col-md-6 mb-3" id="OverTimeDiv" style="display: none">
+                                                    <label for="OverTimeID" class="form-label">Over Time Data</label>
+                                                    @if (Model.CompensatoryOffModel != null)
+                                                    {
+                                                        <select asp-for="OverTimeID" asp-items="@(new SelectList(Model.CompensatoryOffModel,"OverTimeID","TempVariable"))" class="form-control" id="OverTimeID" onchange="clearovertimevalidation()" onclick="clearovertimevalidation()">
+                                                            <option value="Null">Please Select Any one</option>
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                        <select class="form-control" id="OverTimeID">
+                                                            <option value="Null">Please Select Any one</option>
+                                                        </select>
+                                                    }
+                                                    <span id="validateovertime" class="text-danger"></span>
+                                                </div>*@
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                    <label for="LeaveFrom" class="form-label">From</label>
+                                                    <input type="date" class="form-control" id="AlternateLeaveFrom" onclick="clearfromdatevalidation()" onchange="configureTotalLeave()">
+                                                    <span id="validateleavefrom" class="text-danger">@ViewBag.FromDateError</span>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                    <label for="FromHalf" class="form-label">From <span class="text-info">(If you are applying for Half day)</span></label>
+                                                    <select class="form-control" id="FromHalf" asp-for="FromHalf" onclick="clearfromhalfvalidation()" onchange="configureTotalLeave()">
+                                                        <option value="Null">Please select any one</option>
+                                                        <option value="ForeNoon">Fore Noon (First Half)</option>
+                                                        <option value="AfterNoon">After Noon (Second Half)</option>
+                                                    </select>
+                                                    <span id="validatefromhalf" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                    <label for="LeaveTo" class="form-label">To</label>
+                                                    <input type="date" class="form-control" id="AlternateLeaveTo" onclick="cleartodatevalidation()" onchange="configureTotalLeave()">
+                                                    <span id="validateleaveto" class="text-danger">@ViewBag.ToDateError</span>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                    <label for="ToHalf" class="form-label">To <span class="text-info">(If you are applying for Half day)</span></label>
+                                                    <select class="form-control" id="ToHalf" asp-for="ToHalf" onclick="cleartohalfvalidation()" onchange="configureTotalLeave()">
+                                                        <option value="Null">Please select any one</option>
+                                                        <option value="ForeNoon">Fore Noon (First Half)</option>
+                                                        <option value="AfterNoon">After Noon (Second Half)</option>
+                                                    </select>
+                                                    <span id="validatetohalf" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="TotalLeave" class="form-label">Total Days</label>
+                                                    <input type="text" asp-for="TotalLeave" class="form-control" id="TotalLeave" readonly>
+                                                    <span id="validatetotalleave" class="text-danger">@ViewBag.TotalTimeError</span>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label>Reporting Officer</label>
+                                                    @if (Model.ReportingOfficerListModel != null)
+                                                    {
+                                                        <select asp-for="ReportingOfficer" asp-items="@(new SelectList(Model.ReportingOfficerListModel,"StaffNumber","Name"))" class="form-control" id="ReportingOfficer" onchange="clearreportingofficervalidation()" onclick="clearreportingofficervalidation()">
+                                                            <option value="-1">Please Select Reporting Officer</option>
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                        <select asp-for="ReportingOfficer" class="form-control" id="ReportingOfficer">
+                                                            <option value="-1">Please Select Reporting Officer</option>
+                                                        </select>
+                                                    }
+                                                    <span id="validatereportingofficer" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <div class="col-4 mb-3">
+                                                <label for="Reason" class="form-label">Reason</label>
+                                                <textarea class="form-control" asp-for="Reason" rows="2" id="Reason" onclick="clearreasonvalidation()" onkeypress="clearreasonvalidation()"></textarea>
+                                                <span id="validatereason" class="text-danger"></span>
+                                                <input class="form-check-input ms-1 mt-2" type="checkbox" value="" id="MedicalCheckBox" onclick="toggleattachment()">
+                                                <label class="form-check-label ms-4 mt-1" id="MedicalCheckBoxLabel" for="flexCheckDefault">Based on Medical Grounds</label>
+                                            </div>
+                                            <div class="col-4 mb-3">
+                                                <label for="AddresOnLeave" class="form-label">Address On Leave</label>
+                                                <textarea class="form-control" asp-for="AddresOnLeave" rows="2" id="AddresOnLeave" onclick="clearaddressvalidation()" onkeypress="clearaddressvalidation()"></textarea>
+                                                <span id="validateaddressonleave" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-4 mb-3">
+                                                <label for="Remarks" class="form-label">Remarks</label>
+                                                <textarea class="form-control" asp-for="NewRemarks" rows="2" id="Remarks" onclick="clearremarksvalidation()" onkeypress="clearremarksvalidation()"></textarea>
+                                                <span id="validateremarks" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3" id="MedicalDiv">
+                                                <label for="Attachment" class="form-label">Attachment File</label>
+                                                <input type="file" id="Attachment" name="Attachment" class="form-control" onclick="clearattachmentvalidation()">
+                                                <span id="validateattachment" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" id="submitbtn" class="btn btn-primary px-5 mt-2 float-end">Submit</button>
+                                    <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("Index","User")">Go Back</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/user/apply-leave.js"></script>

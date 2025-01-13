@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Http;
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!-- css -->
+<link rel="stylesheet" href="~/assets/css/user/home-page.css">
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="row ms-5 mb-4">
+                        <div class="row mb-4 border p-3 idrrequest">
+                            <h4>Contigent Bill</h4>
+                            <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 mr-3 mt-2">
+                                <div class="box py-3 row hvr-grow-shadow myidrrequest text-center">
+                                     <a href="@Url.Action("RaiseContigentBill","User")" style="text-decoration: none" class="text-black">
+                                        <p>Raise Contigent Bill</p>
+                                     </a>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 mr-3 mt-2">
+                                <div class="box py-3 row hvr-grow-shadow myidrrequest text-center">
+                                     <a href="@Url.Action("MyContingentBillRequestWithoutFilter","User")" style="text-decoration: none" class="text-black">
+                                        <p>My Requests</p>
+                                     </a>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 mr-3 mt-2">
+                                <div class="box py-3 row hvr-grow-shadow myidrrequest text-center">
+                                     <a href="@Url.Action("PendingContingentBillRequestWithoutFilter","User")" style="text-decoration: none" class="text-black">
+                                        <p>Pending Requests</p>
+                                     </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

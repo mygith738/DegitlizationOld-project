@@ -1,0 +1,551 @@
+﻿
+@using Digitalization.Models.UserModel
+@model PurchaseIndentMorethan25kModel
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css"/>
+
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("PurchaseIndentMorethan25k","User")" style="text-decoration: none">PurchaseIndentMorethan25k</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">RaisePurchaseIndent</li>
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">Raise Purchase Indent</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger"></span>
+                        <hr>
+                        <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="RaisePurchaseIndentMorethan25k" class="m-4 pb-5" name="register-form">
+                            <div class="tab-content">
+                                <div class="" id="userdetails">
+                                <!-- start coding from here -->
+
+                                    <div class="row m-1 border rounded-top mt-4 p-3" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-3 mb-3">
+                                                <label for="ProprietaryArticleCertificateEnclosed" class="form-label">Proprietary Article Certificate Enclosed</label>
+                                                <input type="text" class="form-control" asp-for="IsProprietaryArticleEnclosed" id="ProprietaryArticleCertificateEnclosed" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="CGCApproval" class="form-label">CGCApproval</label>
+                                                <input type="text" asp-for="IsCGCApprovalAttached" class="form-control" id="CGCApproval" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="FundAvailable" class="form-label">FundAvailable</label>
+                                                <input type="text" asp-for="FundAvailability" class="form-control" id="FundAvailable" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="Training" class="form-label">Training</label>
+                                                <input type="text" asp-for="Training" class="form-control" id="Training" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="InstallationandUtilities" class="form-label">InstallationandUtilities</label>
+                                                <input type="text" asp-for="IsInstallationSiteUtilitiesReady" class="form-control" id="InstallationandUtilities" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="RequirementImported" class="form-label">RequirementImported</label>
+                                                <input type="text" asp-for="IsRequirementImported" class="form-control" id="RequirementImported" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="GroupID" class="form-label">GroupID</label>
+                                                <input type="text" asp-for="IndentorGroupID" class="form-control" id="GroupID" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="CenterID" class="form-label">CenterID</label>
+                                                <input type="text" asp-for="IndentorCenterID" class="form-control" id="CenterID" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="AlternateApproximateDateForInstallationUtilities" class="form-label">ApproximateDateForInstallationUtilities</label>
+                                                <input type="text" asp-for="ApproximateDateForInstallationUtilities" class="form-control" id="AlternateApproximateDateForInstallationUtilities" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                        <div class="row">
+                                            <div class="col-3 mb-3">
+                                                <label for="StaffNumber" class="form-label">StaffNumber</label>
+                                                <input type="number" asp-for="IndentorStaffNumber" class="form-control" id="StaffNumber" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="Name" class="form-label">Name</label>
+                                                <input type="text" asp-for="IndentorName" class="form-control" id="Name" readonly>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="Designation" class="form-label">Designation</label>
+                                                <input type="text" asp-for="IndentorDesignation" class="form-control" id="Designation" readonly>
+                                            </div>
+                                            @*<div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                <label>Reporting Officer</label>
+                                                @if (@Model.ReportingOfficerModel != null)
+                                                {
+                                                    <select asp-for="ReportingOfficerStaffNumber" asp-items="@(new SelectList(@Model.ReportingOfficerModel,"StaffNumber","Name"))" class="form-control" id="ReportingOfficer" onchange="clearreportingofficervalidation()" onclick="clearreportingofficervalidation()">
+                                                        <option value="-1">Please Select Reporting Officer</option>
+                                                    </select>
+                                                }
+                                                else
+                                                { 
+                                                    <select class="form-control" id="ReportingOfficer">
+                                                        <option value="-1">Please Select Reporting Officer</option>
+                                                    </select>
+                                                }
+                                                <span id="validatereportingofficer" class="text-danger"></span>
+                                            </div>*@
+                                        </div>
+                                    </div>  
+                                                
+                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                        <div class="row">
+                                            <div class="col-6 mb-3">
+                                                <label for="ItemsForDept" class="form-label">1. The following items are required for the Center/Group/Project:</label>
+                                                <div class="row">
+                                                    <div class="col-6 mb-3">
+                                                        <label for="GroupName" class="form-label">Group</label>
+                                                        <input type="text" asp-for="IndentorGroupName" class="form-control" id="GroupName" readonly>
+                                                    </div>
+                                                    <div class="col-6 mb-3">
+                                                        <label for="CenterName" class="form-label">Center</label>
+                                                        <input type="text" asp-for="IndentorCenterName" class="form-control" id="CenterName" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 mb-3" >
+                                                <label for="ProjectHead" class="form-label">2. Project/Account Head:</label>
+                                                <textarea class="form-control" asp-for="ProjectHead" id="ProjectHead" onclick="clearvalidateprojecthead()" onkeypress="clearvalidateprojecthead()"></textarea>
+                                                <span id="validateprojecthead" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                        @{
+                                            int j = 1;
+                                        }
+                                        @for(var row=0;row<10;row++)
+                                        {
+                                            <div id="EquipmentDiv(@row)">
+                                                <div class="row">
+                                                    <div class="col-1 mb-3">
+                                                        @if(row==0)
+                                                        {
+                                                            <label for="Number">Sl.No.</label>
+                                                        }
+                                                        <input type="number" class="form-control" id="Number" value=@j readonly>
+                                                    </div>
+                                                    <div class="col-3 mb-3">
+                                                        @if(row==0)
+                                                        {
+                                                            <label for="Description">Description of Item</label>
+                                                        }
+                                                        <textarea asp-for="@Model.PurchaseIndentItems[row].ItemDescription"  class="form-control" id="Description(@row)" onclick="clearvalidatedescription(@row)" onkeypress="clearvalidatedescription(@row)"></textarea>
+                                                        <span id="validatedescription(@row)" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-3 mb-3">
+                                                        @if(row==0)
+                                                        {
+                                                            <label for="QuantityRequired">Quantity Required</label>
+                                                        }
+                                                        <input type="text" asp-for="@Model.PurchaseIndentItems[row].ItemQuantity" class="form-control" id="QuantityRequired(@row)" onclick="clearvalidatequantityrequired(@row)" onkeypress="clearvalidatequantityrequired(@row)">
+                                                        <span id="validatequantityrequired(@row)" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-3 mb-3">
+                                                        @if(row==0)
+                                                        {
+                                                            <label for="Cost">Estimated Cost</label>
+                                                        }
+                                                        <input type="Number" asp-for="@Model.PurchaseIndentItems[row].ItemCost" class="form-control" id="Cost(@row)" onclick="clearvalidatecost(@row)" onkeypress="clearvalidatecost(@row)">
+                                                        <span id="validatecost(@row)" class="text-danger"></span>                                                        
+                                                    </div>
+                                                    <div class="col-1 text-center">
+                                                        @if(row==0)
+                                                        {
+                                                            <button class="btn btn-primary mt-4" type="button" id="addequipmentbutton(@row)" onclick="addequipmentdiv(@row)">Add</button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button class="btn btn-primary" type="button" id="addequipmentbutton(@row)" onclick="addequipmentdiv(@row)">Add</button>
+                                                        }
+                                                    </div>
+                                                    @if(row!=0)
+                                                    {
+                                                        <div class="col-1">
+                                                            <button class="btn btn-primary" type="button" id="removeequipmentbutton(@row)" onclick="removeequipmentdiv(@row)">Remove</button>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            j++;
+                                        }
+                                    </div> 
+                                            
+                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                        <div class="row mt-4">
+                                            <div class="col-4 mb-3">
+                                                <label for="AttachmentFile" class="form-label"><span class="text-danger">*</span> Attach File</label>
+                                                <input type="file" class="form-control" id="AttachmentFile" name="AttachmentFile" onclick="clearvalidateattachment()" onkeypress="clearvalidateattachment()"/>
+                                                <span class="text-info">Technical specification sheet</span><br />
+                                                <span id="validateattachment" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-4 mb-3">
+                                                <label for="AttachmentAbove15L" class="form-label"><span class="text-danger">*</span> Attach File</label>
+                                                <input type="file" class="form-control" id="AttachmentAbove15L" name="AttachmentAbove15L" onclick="clearvalidateattachmentabove15l()" onkeypress="clearvalidateattachmentabove15l()" />
+                                                <span class="text-info">If estimated cost > 15L CGC format to be filled and attached for expenditure to be booked under C1, C3, C5, C6 & C7 account heads</span><br />
+                                                <span id="validateattachmentabove15l" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                        <div class="form-group row">
+                                            <label for="ProprietaryArticleCertificateEnclosed" class="col-6 form-label">3. For, Purchase of Proprietary items, Proprietary Article Certificate enclosed:</label>
+                                            <div class="col-5 ml-4">
+                                                <input class="form-check-input" type="radio" name="ProprietaryArticleCertificateEnclosedOptions" id="ProprietaryArticleCertificateEnclosedYes" onclick="toggleProprietaryArticleCertificateEnclosed('Yes')">
+                                                <label class="form-check-label mr-5" for="inlineRadio1">Yes</label>
+
+                                                <input class="form-check-input" type="radio" name="ProprietaryArticleCertificateEnclosedOptions" id="ProprietaryArticleCertificateEnclosedNo" onclick="toggleProprietaryArticleCertificateEnclosed('No')">
+                                                <label class="form-check-label mr-5" for="inlineRadio2">No</label>
+                                                <span id="validateproprietaryarticlecertificateenclosed" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+                                        <div id="ProprietaryArticleCertificateEnclosedDiv">
+                                            <div class="form-group row">
+                                                <label for="ProprietaryArticleCertificateEnclosedAttachment" class="col-6 form-label"> </label>
+                                                <div class="col-5">
+                                                    <label for="">Attachment</label>
+                                                    <input type="file" id="ProprietaryArticleCertificateEnclosedAttachment" name="ProprietaryArticleCertificateEnclosedAttachment" onclick="clearvalidateproprietaryarticlecertificateenclosedattachment()" class="form-control">
+                                                    <span id="validateproprietaryarticlecertificateenclosedattachment" class="text-danger"></span><br />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="CGCApproval" class="col-6 form-label">4. CGC Approval attached:</label>
+                                            <div class="col-5 ml-4">
+                                                <input class="form-check-input" type="radio" name="CGCApprovalOptions" id="CGCApprovalYes" value="Yes" onclick="toggleCGCApproval('Yes')">
+                                                <label class="form-check-label mr-5" for="inlineRadio1">Yes</label>
+        
+                                                <input class="form-check-input" type="radio" name="CGCApprovalOptions" id="CGCApprovalNo" value="No" onclick="toggleCGCApproval('No')">
+                                                <label class="form-check-label mr-5" for="inlineRadio2">No</label>
+        
+                                                <input class="form-check-input" type="radio" name="CGCApprovalOptions" id="CGCApprovalNA" value="NotAvailable" onclick="toggleCGCApproval('NA')">
+                                                <label class="form-check-label mr-5" for="inlineRadio2">Not Applicable</label>
+                                                <span id="validatecgcapproval" class="text-danger"></span>
+
+                                            </div>
+                                        </div>
+
+                                        <div id="CGCApprovalAttachmentDiv">
+                                            <div class="form-group row">
+                                                <label for="CGCApprovalAttachment" class="col-6 form-label"> </label>
+                                                <div class="col-5">
+                                                    <label for="">Attachment</label>
+                                                    <input type="file" id="CGCApprovalAttachment" name="CGCApprovalAttachment" class="form-control"><br />
+                                                    <span id="validatecgcapprovalattachment" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group row">
+                                            <label for="RequirementIsFresh" class="col-6 form-label">5. Whether requirement is fresh/additional/replacement:</label>
+                                            <div class="col-6">
+                                                @*<input type="text" asp-for="RequirementType" class="form-control" id="RequirementIsFresh" onclick="clearvalidaterequirementisfresh()" onkeypress="clearvalidaterequirementisfresh()"/>*@
+                                                <select asp-for="RequirementType" class="form-control" id="RequirementIsFresh" onclick="clearvalidaterequirementisfresh()" onkeypress="clearvalidaterequirementisfresh()">
+                                                    <option value="Null">Please select any one</option>
+                                                    <option value="Fresh">Fresh</option>
+                                                    <option value="Additional">Additional</option>
+                                                    <option value="Replacement">Replacement</option>
+                                                </select>
+                                                <span id="validaterequirementisfresh" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                                    
+                                        <div class="form-group row">
+                                            <label for="RequirementImported" class="col-6 form-label">6. Whether requirement is to be imported:</label>
+                                            <div class="col-5 ml-4">                                                
+                                                <input class="form-check-input" type="radio" name="RequirementImportedOptions" id="RequirementImportedOptionsYes" value="Yes" onclick="toggleRequirementImported('Yes')">
+                                                <label class="form-check-label mr-5" for="inlineRadio1">Yes</label>
+        
+                                                <input class="form-check-input" type="radio" name="RequirementImportedOptions" id="RequirementImportedOptionsNo" value="No" onclick="toggleRequirementImported('No')">
+                                                <label class="form-check-label mr-5" for="inlineRadio2">No</label>
+                                                <span id="validaterequirementimported" class="text-danger"></span>
+
+                                            </div>
+                                        </div>
+                                                    
+                                        <div class="form-group row">
+                                            <label for="DeliveryofItem" class="col-6 form-label">7. The delivery of item is required by (realistic period):</label>
+                                            <div class="col-6">
+                                                <input type="text" asp-for="DeliveryRequiredTime" class="form-control" id="DeliveryofItem" onclick="clearvalidatedeliveryofitem()" onkeypress="clearvalidatedeliveryofitem()"/>
+                                                <span id="validatedeliveryofitem" class="text-danger"></span>
+                                            </div> 
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="BudgetProvision" class="col-6 form-label">8. Budget provision (duly linking with the project/Scheme):The item is appearing at Sl.No of the approved list of equipment etc(whether applicable) of the project</label>
+                                            <div class="col-6">
+                                                <input type="text" asp-for="BudgetProvision" class="form-control" id="BudgetProvision" onclick="clearvalidatebudgetprovision()" onkeypress="clearvalidatebudgetprovision()"/>
+                                                <span id="validatebudgetprovision" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="FundAvailable" class="col-6 form-label">9. Whether necessary fund is available to process this item:(to be certified by FA&CAO and GH(PPM))</label>
+                                            <div class="col-5 ml-4">
+                                                <input class="form-check-input" type="radio" name="FundAvailableOptions" id="FundAvailableYes" onclick="toggleFundAvailable('Yes')">
+                                                <label class="form-check-label mr-5" for="inlineRadio1">Yes</label>
+
+                                                <input class="form-check-input" type="radio" name="FundAvailableOptions" id="FundAvailableNo" onclick="toggleFundAvailable('No')">
+                                                <label class="form-check-label mr-5" for="inlineRadio2">No</label>
+                                                <span id="validatefund" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="BudgetHead" class="col-6 form-label">10. Budget Head:</label>
+                                            <div class="col-6">
+                                                <input type="text" asp-for="BudgetHead" class="form-control" id="BudgetHead" onclick="clearvalidatebudgethead()" onkeypress="clearvalidatebudgethead()"/>
+                                                <span id="validatebudgethead" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="Operational" class="col-6 form-label">11. The approximate period required for the equipment to become operational from the date of its arrival days (in days) </label>
+                                            <div class="col-6">
+                                                <input type="text" asp-for="OperationalPeriodRequiredForEquipment" class="form-control" id="Operational" onclick="clearvalidateoperational()" onkeypress="clearvalidateoperational()"/>
+                                                <span id="validateoperational" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="AMC" class="col-6 form-label">12. Please mention the useful life of equipment, availability of spares, and arrangement for maintainence(AMC) etc..</label>
+                                            <div class="col-6">
+                                                <input type="text" asp-for="AMC" class="form-control" id="AMC" onclick="clearvalidateamc()" onkeypress="clearvalidateamc()"/>
+                                                <span id="validateamc" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="Training" class="col-6 form-label">13. Training if any:</label>
+                                            <div class="col-5 ml-4">
+                                                <input class="form-check-input" type="radio" name="TrainingOptions" id="TrainingYes" value="Yes" onclick="toggleTraining('Yes')">
+                                                <label class="form-check-label mr-5" for="inlineRadio1">Yes</label>
+        
+                                                <input class="form-check-input" type="radio" name="TrainingOptions" id="TrainingNo" value="No" onclick="toggleTraining('No')">
+                                                <label class="form-check-label mr-5" for="inlineRadio2">No</label>
+                                                <span id="validatetraining" class="text-danger"></span>
+                                            </div>
+
+                                            <div id="OEMSiteorCMTIandTimeDiv">
+                                                <div class="row mt-2">
+                                                    <label for="OEMSiteorCMTI" class="col-6 form-label"> </label>
+                                                    <div class="col-3">
+                                                        <select asp-for="TrainingLocation" id="OEMSiteorCMTI" class="form-control" onclick="clearvalidateoemsiteorcmti()" onchange="clearvalidateoemsiteorcmti()">
+                                                            <option value="Null">Please select any one</option>
+                                                            <option value="OEM Site">OEM Site</option>
+                                                            <option value="CMTI">CMTI</option>
+                                                        </select>
+                                                        <span id="validateoemsiteorcmti" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <input type="time" asp-for="TrainingTime" class="form-control" id="Time" onclick="clearvalidatetime()" onkeypress="clearvalidatetime()"/>
+                                                        <span id="validatetime" class="text-danger"></span>
+                                                    </div> 
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="AcceptanceCriteria" class="col-6 form-label">14. Acceptance Criteria:</label>
+                                            <div class="col-6">
+                                                <select asp-for="AcceptanceCriteria" id="AcceptanceCriteria" class="form-control" onclick="clearvalidateacceptancecriteria()" onchange="clearvalidateacceptancecriteria()">
+                                                    <option value="Null">Please select any one</option>
+                                                    <option value="OEM Site">Pre-dispatch</option>
+                                                    <option value="CMTI">On Installation at Site</option>
+                                                </select>
+                                                <span id="validateacceptancecriteria" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="InstallationandUtilities" class="col-6 form-label">15. Is Installation site and Utilities are ready:</label>
+                                            <div class="col-5 ml-4">
+                                                <input class="form-check-input" type="radio" name="InstallationandUtilitiesOptions" id="InstallationandUtilitiesYes" value="Yes" onclick="toggleInstallationandUtilities('Yes')">
+                                                <label class="form-check-label mr-5" for="inlineRadio1">Yes</label>
+        
+                                                <input class="form-check-input" type="radio" name="InstallationandUtilitiesOptions" id="InstallationandUtilitiesNo" value="No" onclick="toggleInstallationandUtilities('No')">
+                                                <label class="form-check-label mr-5" for="inlineRadio2">No</label>
+                                                <span id="validateinstallationandutilities" class="text-danger"></span>
+                                            </div>
+
+                                            <div id="ApproximateDateDiv">
+                                                <div class="row mt-2">
+                                                    <label for="" class="col-6"></label>
+                                                    <label for="ApproximateDate" class="col-3 form-label">   Approximate date of ready</label>
+                                                    <div class="col-3">
+                                                        <input type="date" class="form-control" onclick="clearvalidateapproximatedate()" id="ApproximateDate"/>
+                                                        <span id="validateapproximatedate" class="text-danger"></span>
+                                                    </div>
+                                                </div> 
+                                            </div>     
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="ItemInStores" class="col-6 form-label">16. Certified that the item is not available in stores:(To be obtained at stores)</label>
+                                            <div class="col-6">
+                                                <input type="text" asp-for="ItemAvailabilityInStores" class="form-control" id="ItemInStores" onclick="clearvalidateiteminstores()" onkeypress="clearvalidateiteminstores()"/>
+                                                <span id="validateiteminstores" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+                                        @*<div class="form-group row">
+                                            <label for="AvailableVendors" class="col-8 form-label">The list of available vendors, their addresses, past experiences(if any) and website wherever available:</label>
+                                            <div class="form-group row border mt-3 p-3 ml-2">
+                                                @{
+                                                    int i = 1;
+                                                }
+                                                @for(var row = 0; row < 10; row ++)
+                                                {
+                                                   <div id="VendorDiv(@row)">
+                                                        <div class="row">
+                                                            <div class="col-1 my-2 p-2">
+                                                                <input type="number" class="form-control" id="requirement" value="@i"/>
+                                                            </div>
+                                                            <div class="col-3">
+                                                                <textarea name="Vendor1" asp-for="@Model.PurchaseVendors[row].VendorName" id="Vendor1(@row)" class="form-control" onclick="clearvalidatevendor1(@row)" onkeypress="clearvalidatevendor1(@row)"></textarea>
+                                                                <span id="validatevendor1(@row)" class="text-danger"></span>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <textarea name="Experience" asp-for="@Model.PurchaseVendors[row].PastExperience" id="Experience(@row)" class="form-control" onclick="clearvalidateexperience(@row)" onkeypress="clearvalidateexperience(@row)"></textarea>
+                                                                <span id="validateexperience(@row)" class="text-danger"></span>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <textarea class="form-control" asp-for="@Model.PurchaseVendors[row].VendorWebsite" id="Website(@row)" class="form-control" onclick="clearvalidatewebsite(@row)" onkeypress="clearvalidatewebsite(@row)"></textarea>
+                                                                <span id="validatewebsite(@row)" class="text-danger"></span>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <textarea asp-for="@Model.PurchaseVendors[row].Address" id="Address(@row)" class="form-control" onclick="clearvalidateaddress(@row)" onkeypress="clearvalidateaddress(@row)"></textarea>
+                                                                <span id="validateaddress(@row)" class="text-danger"></span>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <button class="btn btn-primary" type="button" id="addbutton(@row)" onclick="adddiv(@row)">Add</button>
+                                                            </div>
+                                                            @if(row!=0)
+                                                            {
+                                                                <div class="col-1">
+                                                                    <button class="btn btn-primary" type="button" id="removebutton(@row)" onclick="removediv(@row)">Remove</button>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    i++;
+                                                }
+                                            </div>
+                                        </div>*@
+    
+                                        <div class="form-group row">
+                                            <label for="AvailableVendors" class="col-8 form-label">The list of available vendors, their addresses, past experiences(if any) and website wherever available:</label>
+                                            <textarea class="form-control" rows="6" asp-for="AvailableVendors" id="AvailableVendors" onclick="clearvalidateavailablevendors()" onkeypress="clearvalidateavailablevendors()"></textarea>
+                                            <span id="validateavailablevendors" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-check form-switch m-3">
+                                          <input class="form-check-input" type="checkbox" id="RequirementCheckBox" name="darkmode" value="yes" onclick="clearvalidaterequirementcheckbox()">
+                                          <label class="form-check-label" for="mySwitch">17. It is certified that the specifications are complete and correct to meet the CMTI reqirements.</label><br />
+                                          <span id="validaterequirementcheckbox" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-check form-switch m-3">
+                                          <input class="form-check-input" type="checkbox" id="ProjectCheckBox" name="darkmode" value="yes" onclick="clearvalidateprojectcheckbox()">
+                                          <label class="form-check-label" for="mySwitch">18. Certified that indented items are required for the above said Center/Group/Project.</label><br />
+                                          <span id="validateprojectcheckbox" class="text-danger"></span>
+                                        </div>
+
+                                        @*<div class="form-group row">
+                                            <label for="" class="col-6 form-label">18. Certified that indented items are required for the above said project/Department.</label>
+                                        </div>*@
+                                    </div>
+
+                                    @*<div class="row m-1 border rounded-top mt-4 p-3">
+                                        <div class="row">
+                                            <div class="col-3 mb-3">
+                                                <label>Signature of Indenting Officer</label>
+                                                <input type="text" class="form-control" id="IndentingOfficer">
+                                                <span id="validateindentingofficer" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label>Name</label>
+                                                <input type="text" class="form-control" id="Name">
+                                                <span id="validatename" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label>Designation</label>
+                                                <input type="text" class="form-control" id="Designation">
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label>Department</label>
+                                                <input type="text" class="form-control" id="Designation">
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label>Telephone Number</label>
+                                                <input type="number" class="form-control" id="Designation">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-1 border rounded-top mt-4 p-3">
+                                        <div class="row">
+                                            <div class="col-3 mb-3">
+                                                <label>Signature of GH/PL/CH</label>
+                                                <input type="text" class="form-control" id="Designation">
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label>Name</label>
+                                                <input type="number" class="form-control" id="Number">
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label>Designation</label>
+                                                <input type="text" class="form-control" id="Designation">
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label>Department</label>
+                                                <input type="text" class="form-control" id="Designation">
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label>Telephone Number</label>
+                                                <input type="number" class="form-control" id="Designation">
+                                            </div>
+                                        </div>
+                                    </div>*@
+
+                                    <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("PurchaseIndentMorethan25k","User")">Go Back</a>
+                                    <button type="submit" class="btn btn-primary float-end px-5 mt-2 mr-2">Submit</button>
+                                                
+                                <!-- within this block -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/user/raise-purchase-indent-morethan25k.js"></script>

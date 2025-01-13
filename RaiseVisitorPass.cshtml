@@ -1,0 +1,412 @@
+﻿@using Digitalization.Models.UserModel
+@model VisitorPassModel
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css" />
+
+<script src="~/assets/js/webcam/webcam.js"></script>
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("VisitorPass","User")" style="text-decoration: none">VisitorPass</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">RaiseVisitorPass</li>
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">Raise Visitor Pass</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+                        <hr>
+                        <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="RaiseVisitorPass" class="m-4 pb-5" name="register-form">
+                            <div class="tab-content">
+                                <div class="" id="userdetails">
+                                    <div class="row">
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <div class="row">
+                                                <h5 class="mb-3 text-primary">Data entry done by</h5>
+                                                <!-- hidden field start -->
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3" style="display: none">
+                                                    <label for="SenderGroupID" class="form-label">SenderGroupID</label>
+                                                    <input type="number" asp-for="SenderGroupID" class="form-control" id="SenderGroupID">
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3" style="display: none">
+                                                    <label for="SenderCenterID" class="form-label">SenderCenterID</label>
+                                                    <input type="number" asp-for="SenderCenterID" class="form-control" id="SenderCenterID">
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3" style="display: none">
+                                                    <label for="VisitorImageLocation" class="form-label">VisitorImageLocation</label>
+                                                    <input type="text" asp-for="VisitorImageLocation" class="form-control" id="VisitorImageLocation">
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3" style="display: none">
+                                                    <label for="IsCarryingLaptop" class="form-label">IsCarryingLaptop</label>
+                                                    <input type="text" asp-for="IsCarryingLaptop" class="form-control" id="IsCarryingLaptop">
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3" style="display: none">
+                                                    <label for="IsCarryingPendrive" class="form-label">IsCarryingPendrive</label>
+                                                    <input type="text" asp-for="IsCarryingPendrive" class="form-control" id="IsCarryingPendrive">
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3" style="display: none">
+                                                    <label for="IsCarryingOther" class="form-label">IsCarryingOther</label>
+                                                    <input type="text" asp-for="IsCarryingOther" class="form-control" id="IsCarryingOther">
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3" style="display: none">
+                                                    <label for="OtherCarryingItem" class="form-label">OtherCarryingItem</label>
+                                                    <input type="text" asp-for="OtherCarryingItem" class="form-control" id="OtherCarryingItem">
+                                                </div>
+                                                <!-- hidden field end -->
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SenderStaffNumber" class="form-label">Staff Number</label>
+                                                    <input type="text" asp-for="SenderStaffNumber" class="form-control" id="SenderStaffNumber" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SenderFirstName" class="form-label">Name</label>
+                                                    <input type="text" asp-for="SenderFirstName" class="form-control" id="SenderFirstName" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SenderCenterName" class="form-label">Center</label>
+                                                    <input type="text" asp-for="SenderCenterName" class="form-control" id="SenderCenterName" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SenderGroupName" class="form-label">Group</label>
+                                                    <input type="text" asp-for="SenderGroupName" id="SenderGroupName" class="form-control" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div style="display: none">
+                                                @*@foreach(var visitor in @Model.VisitedVisitors)*@
+                                                @for(int v=0;v<@Model.VisitedVisitors.Count();v++)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitedVisitorName" class="form-label">Name</label>
+                                                            <input type="text" asp-for="@Model.VisitedVisitors[v].VisitorName" class="form-control" id="VisitedVisitorName(@v)" readonly>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitedVisitorDesignaton" class="form-label">Designation</label>
+                                                            <input type="text" asp-for="@Model.VisitedVisitors[v].VisitorDesignation" class="form-control" id="VisitedVisitorDesignaton(@v)" readonly>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitedVisitorMobileNumber" class="form-label">MobileNumber</label>
+                                                            <input type="text" asp-for="@Model.VisitedVisitors[v].VisitorMobileNumber" class="form-control" id="VisitedVisitorMobileNumber(@v)" readonly>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitedVisitorEmail" class="form-label">Email</label>
+                                                            <input type="text" asp-for="@Model.VisitedVisitors[v].VisitorEmailID" id="VisitedVisitorEmail(@v)" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitedVisitorAge" class="form-label">Age</label>
+                                                            <input type="text" asp-for="@Model.VisitedVisitors[v].VisitorAge" class="form-control" id="VisitedVisitorAge(@v)" readonly>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitedVisitorGender" class="form-label">Gender</label>
+                                                            <input type="text" asp-for="@Model.VisitedVisitors[v].VisitorGender" class="form-control" id="VisitedVisitorGender(@v)" readonly>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitedVisitorNationality" class="form-label">Nationality</label>
+                                                            <input type="text" asp-for="@Model.VisitedVisitors[v].Nationality" id="VisitedVisitorNationality(@v)" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitedVisitorOrganizationName" class="form-label">Organization Name</label>
+                                                            <input type="text" asp-for="@Model.VisitedVisitors[v].VisitorInstitution" class="form-control" id="VisitedVisitorOrganizationName(@v)" readonly>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitedVisitorAddress" class="form-label">Address</label>
+                                                            <input type="text" asp-for="@Model.VisitedVisitors[v].VisitorAddress" class="form-control" id="VisitedVisitorAddress(@v)" readonly>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <h5 class="mb-3 text-primary">To meet</h5>
+                                            <div class="row">
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SenderCenterName" class="form-label">Employee Center</label>
+                                                    @if(Model.Centers != null)
+                                                    {
+                                                        <select asp-for="EmployeeCenterID" asp-items="@(new SelectList(Model.Centers,"CenterId","CenterName"))" class="form-control" id="Center" onchange="reselectcenter()" onclick="clearcentervalidation()">
+                                                            <option value="-1">Please select center</option>
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                        <select asp-for="EmployeeCenterID" class="form-control" id="Center" onchange="formsubmit()" onclick="clearcentervalidation()">
+                                                            <option value="-1">Please select center</option>
+                                                        </select>
+                                                    }
+                                                    <span id="validatecenter" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SenderGroupName" class="form-label">Employee Group</label>
+                                                    @if(Model.Groups != null)
+                                                    {
+                                                        <select asp-for="EmployeeGroupID" asp-items="@(new SelectList(Model.Groups,"GroupId","GroupName"))" class="form-control" id="Group" onchange="reselectgroup()" onclick="cleargroupvalidation()">
+                                                            <option value="-1">Please select group</option>
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                        <select asp-for="EmployeeGroupID" class="form-control" id="Group" onchange="formsubmit()" onclick="cleargroupvalidation()">
+                                                            <option value="-1">Please select group</option>
+                                                        </select>
+                                                    }
+                                                    <span id="validategroup" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SenderGroupName" class="form-label">Employee Name</label>
+                                                    @if(Model.EmployeeListModel != null)
+                                                    {
+                                                        <select asp-for="EmployeeStaffNumber" asp-items="@(new SelectList(Model.EmployeeListModel,"StaffNumber","Name"))" class="form-control" id="Employee" onchange="clearemployeevalidation()" onclick="clearemployeevalidation()">
+                                                            <option value="-1">Please select employee</option>
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                        <select asp-for="EmployeeStaffNumber" class="form-control" id="Employee" onchange="clearemployeevalidation()" onclick="clearemployeevalidation()">
+                                                            <option value="-1">Please select employee</option>
+                                                        </select>
+                                                    }
+                                                    <span id="validateemployee" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h4 class="text-center mt-4 text-primary">Visitors Details</h4>
+                                        @for(int i=0;i<10;i++)
+                                        {
+                                            <div id="VisitorDiv(@i)">
+                                                <div class="row m-1 border rounded-top p-3">
+                                                    <h4 class="text-center mb-3 text-primary">
+                                                        @{
+                                                            int slno = i + 1;
+                                                        }
+                                                        Visitor - @slno
+                                                    </h4>
+                                                    <div class="row m-1 border rounded-top p-3" id="VisitedDiv(@i)">
+                                                        <div class="form-check col-md-3 col-lg-3 col-sm-4 col-4 mb-3 mt-4" id="CheckBoxDiv(@i)">
+                                                          <input class="form-check-input" type="checkbox" value="" id="AlreadyVisited(@i)" onchange="toggleSearch(@i)">
+                                                          <label class="form-check-label" for="AlreadyVisited">
+                                                            Visitor already visited to the institute
+                                                          </label>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="SearchInput(@i)" class="form-label">Name</label>
+                                                            <input type="text" class="form-control" id="SearchInput(@i)" onchange="filtersearch(@i)" onkeypress="filtersearch(@i)" onclick="filtersearch(@i)">
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="" class="form-label">Visited visitors</label>
+                                                            <select class="form-control" id="VisitorList(@i)" asp-items="@(new SelectList(Model.VisitedVisitors,"TempID","AlternateVisitorName"))" onchange="configureVisitedVisitors(@i)">
+                                                                <option value="Null">Please select visitor</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" id="NotVisitedDiv(@i)">
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitorName" class="form-label">Name</label>
+                                                            <input type="text" asp-for="@Model.VisitorsModel[@i].VisitorName" class="form-control" id="VisitorName(@i)" onclick="clearvisitornamevalidation(@i)" onkeypress="clearvisitornamevalidation(@i)">
+                                                            <span id="validatevisitorname(@i)" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitorDesignation" class="form-label">Designation</label>
+                                                            <input type="text" asp-for="@Model.VisitorsModel[@i].VisitorDesignation" class="form-control" id="VisitorDesignation(@i)" onclick="clearvisitordesignationvalidation(@i)" onkeypress="clearvisitordesignationvalidation(@i)">
+                                                            <span id="validatevisitordesignation(@i)" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitorMobileNumber" class="form-label">Mobile Phone Number</label>
+                                                            <input type="number" asp-for="@Model.VisitorsModel[@i].VisitorMobileNumber" class="form-control" id="VisitorMobileNumber(@i)" onclick="clearvisitormobilenumbervalidation(@i)" onkeypress="clearvisitormobilenumbervalidation(@i)">
+                                                            <span id="validatevisitormobilenumber(@i)" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitorEmailID" class="form-label">Email</label>
+                                                            <input type="email" asp-for="@Model.VisitorsModel[@i].VisitorEmailID" class="form-control" id="VisitorEmailID(@i)" onclick="clearvisitoremailvalidation(@i)" onkeypress="clearvisitoremailvalidation(@i)">
+                                                            <span id="validatevisitoremail(@i)" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitorAge" class="form-label">Age (in years)</label>
+                                                            <input type="number" asp-for="@Model.VisitorsModel[@i].VisitorAge" class="form-control" id="VisitorAge(@i)" onclick="clearvisitoragevalidation(@i)" onkeypress="clearvisitoragevalidation(@i)">
+                                                            <span id="validatevisitorage(@i)" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitorMobileNumber" class="form-label">Gender</label>
+                                                            <select asp-for="@Model.VisitorsModel[@i].VisitorGender" class="form-control" id="VisitorGender(@i)" onclick="clearvisitorgendervalidation(@i)" onkeypress="clearvisitorgendervalidation(@i)">
+                                                                <option value="Null">Please select gender</option>
+                                                                <option value="Male">Male</option>
+                                                                <option value="Female">Female</option>
+                                                                <option value="Other">Other</option>
+                                                            </select>
+                                                            <span id="validatevisitorgender(@i)" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitorIDCardNumber" class="form-label">Visitor ID Card Number (issued by CMTI)</label>
+                                                            <input type="number" asp-for="@Model.VisitorsModel[@i].VisitorIDCardNumber" class="form-control" id="VisitorIDCardNumber(@i)" onclick="clearvisitoridcardnumbervalidation(@i)" onkeypress="clearvisitoridcardnumbervalidation(@i)">
+                                                            <span id="validatevisitoridcardnumber(@i)" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="Nationality" class="form-label">Nationality</label>
+                                                            <select asp-for="@Model.VisitorsModel[@i].Nationality" class="form-control" id="Nationality(@i)" onclick="clearnationalityvalidation(@i)" onchange="togglenationality(@i)">
+                                                                <option value="Null">Please select nationality</option>
+                                                                <option value="Indian">Indian</option>
+                                                                <option value="Other">Other</option>
+                                                            </select>
+                                                            <span id="validatenationality(@i)" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3" id="OtherNationalityDiv(@i)" style="display: none">
+                                                            <label for="OtherNationality" class="form-label">Other Nationality</label>
+                                                            <input type="text" asp-for="@Model.VisitorsModel[@i].OtherNationality" class="form-control" id="OtherNationality(@i)">
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitorInstitution" class="form-label">Organization Name</label>
+                                                            <textarea asp-for="@Model.VisitorsModel[@i].VisitorInstitution" class="form-control" id="VisitorInstitution(@i)" onclick="clearvisitorinstitutionvalidation(@i)" onkeypress="clearvisitorinstitutionvalidation(@i)"></textarea>
+                                                            <span id="validatevisitorinstitution(@i)" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="VisitorAddress" class="form-label">Address</label>
+                                                            <textarea asp-for="@Model.VisitorsModel[@i].VisitorAddress" class="form-control" id="VisitorAddress(@i)" onclick="clearvisitoraddressvalidation(@i)" onkeypress="clearvisitoraddressvalidation(@i)"></textarea>
+                                                            <span id="validatevisitoraddress(@i)" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                    <!-- for visitor pass -->
+                                                    <br><br>
+                                                    <span id="CameraCapture(@i)">@ViewBag.ImageCaptured</span>
+                                                    <div class="row">
+                                                        <div class="col-md-6" style="padding-top:50px;">
+                                                            <div class="panel panel-default">
+                                                                <h5 class="panel-heading mb-3 text-info">Live Web Camera</h5>
+                                                                <div class="panel-body">
+                                                                    <div id="LiveCamera(@i)" style="margin-bottom:50px;"></div>   
+                                                                    <span id="validatevisitorimage" class="text-danger"></span><br />             
+                                                                    <form>
+                                                                        <input type="button" id="CaptureButton" class="btn btn-primary" value="Capture Photo" onClick="CaptureSnapshot(@i)">
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6" style="padding-top:50px;">
+                                                            <div class="panel panel-default">
+                                                                <h5 class="panel-heading mb-3 text-success">Captured Photo</h5>
+                                                                <div class="panel-body">
+                                                                    <div id="results(@i)">Captured Photo will appear here...</div>
+                                                                    <span id="flag(@i)" style="display: none"></span>
+                                                                </div>
+                                                                <br />
+                                                                <br />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- end -->
+                                                    <div>
+                                                        <button class="btn btn-primary col-2 mt-2 mr-2 text-center add-button" id="addvisitor(@i)" type="button" onclick="addvisitor(@i)">Add another Visitor</button>
+                                                        @if(i!=0)
+                                                        {
+                                                            <button class="btn btn-primary col-2 mt-2 text-center add-button" id="removevisitor(@i)" type="button" onclick="removevisitor(@i)">Remove this Visitor</button>
+                                                        }
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        }
+                                        
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <div class="col-md-2 col-lg-2 col-sm-2 col-2 mb-3">
+                                                <h6>Visitor is carrying</h6>
+                                                <div class="form-check form-switch ml-4">
+                                                  <input class="form-check-input" type="checkbox" id="AlternateIsCarryingLaptop" onchange="toggleCarryingLaptop()">
+                                                  <label class="form-check-label" for="Laptop">Laptop</label> 
+                                                  
+                                                  <br />
+
+                                                  <input class="form-check-input" type="checkbox" id="AlternateIsCarryingPendrive" onchange="toggleCarryingPendrive()">
+                                                  <label class="form-check-label" for="Pendrive">Pendrive</label>
+
+                                                  <br />
+
+                                                  <input class="form-check-input" type="checkbox" id="AlternateIsCarryingOther" onchange="toggleCarryingOther()">
+                                                  <label class="form-check-label" for="Other">Other Item</label>
+
+                                                </div>
+                                                <div class="mt-2" style="display: none" id="OtherCarryingItemDiv">
+                                                    <label for="AlternateOtherCarryingItem" class="form-label">Other Carrying Item</label>
+                                                    <input type="text" class="form-control" id="AlternateOtherCarryingItem" onclick="clearothercarryingitemvalidation()" onkeypress="clearothercarryingitemvalidation()">
+                                                    <span id="validateothercarryingitem" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-lg-4 col-sm-4 col-4  mb-3">
+                                                <label for="PurposeOfVisit" class="form-label">Purpose of visit</label>
+                                                <textarea class="form-control" asp-for="PurposeOfVisit" id="PurposeOfVisit" onclick="clearpurposeofvisitvalidation()" onkeypress="clearpurposeofvisitvalidation()"></textarea>
+                                                <span id="validatepurposeofvisit" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-4 col-lg-4 col-sm-4 col-4  mb-3">
+                                                <label for="Remarks" class="form-label">Any other details</label>
+                                                <textarea class="form-control" asp-for="NewRemarks" id="Remarks" onclick="clearremarksvalidation()" onkeypress="clearremarksvalidation()"></textarea>
+                                                <span id="validateremarks" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary px-5 mt-2 float-end" onclick="return validateForm()">Submit</button>
+                                     
+                                    <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("VisitorPass","User")">Go Back</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/user/raise-visitor-pass.js"></script>
+
+<!-- Configure a few settings and attach camera -->  
+<script language="JavaScript">
+    Webcam.set({
+        width: 500,
+        height: 375,
+        image_format: 'png',
+        jpeg_quality: 100
+    });
+
+    for (var i = 0; i < 10; i++) {
+        var livecamera = "LiveCamera(" + i + ")";
+        var isexist = !!document.getElementById(livecamera);
+        
+        if(isexist){
+            Webcam.attach(document.getElementById(livecamera));
+        }
+    }
+</script>
+
+<!-- Javascript code to capture the snapshot and displaying it in the screen -->
+<script language="JavaScript">
+
+    //document.getElementById('flag').innerHTML = 'false';
+
+    function CaptureSnapshot(value) {           
+        Webcam.snap(function (data) {
+            //document.getElementById('flag').innerHTML = 'true';
+            // display results in page
+            var results = "results(" + value + ")";
+            document.getElementById(results).innerHTML = '<img src="' + data + '"/>';
+            // Send image data to the controller to store locally or in database
+            //Webcam.upload(data,'/Camera/Capture?value=' + value, function (code, text) { });  });
+
+            Webcam.upload(data,'http://172.18.21.2:8085/ebandhu/Camera/Capture?value=' + value, function (code, text) { }); });
+    }
+</script> 
+
+    
+<script src="~/assets/js/webcam/jquery.webcam.js"></script>

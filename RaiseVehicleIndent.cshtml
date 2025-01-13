@@ -1,0 +1,182 @@
+﻿@using Digitalization.Models.UserModel
+@model VehicleIndentModel
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("VehicleIndent","User")" style="text-decoration: none">VehicleIndent</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">RaiseVehicleIndent</li>
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">Raise Vehicle Indent</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger">@ViewBag.Error</span>
+                        <hr>
+                        <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="RaiseVehicleIndent" class="m-4 pb-5" name="register-form">
+                            <div class="tab-content">
+                                <div class="" id="userdetails">
+                                    <div class="row">
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <div class="row">
+                                                <!-- hidden field start -->
+                                                    <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3" style="display: none">
+                                                        <label for="TemporaryIndentRequiredDate" class="form-label">Required On</label>
+                                                        <input type="text" asp-for="IndentRequiredDate" class="form-control" id="TemporaryIndentRequiredDate">
+                                                    </div>
+                                                    <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3" style="display: none">
+                                                        <label for="TemporaryIndentRequiredTime" class="form-label">Time</label>
+                                                        <input type="text" asp-for="IndentRequiredTime" class="form-control" id="TemporaryIndentRequiredTime">
+                                                    </div>
+                                                <!-- hidden field end -->
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SenderStaffNumber" class="form-label">Indentor Staff Number</label>
+                                                    <input type="text" asp-for="SenderStaffNumber" class="form-control" id="SenderStaffNumber" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SenderFirstName" class="form-label">Indentor Name</label>
+                                                    <input type="text" asp-for="SenderFirstName" class="form-control" id="SenderFirstName" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SenderGroupName" class="form-label">Indentor Group</label>
+                                                    <input type="text" asp-for="SenderGroupName" id="SenderGroupName" class="form-control" readonly>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label for="SenderCenterName" class="form-label">Indentor Center</label>
+                                                    <input type="text" asp-for="SenderCenterName" class="form-control" id="SenderCenterName" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                    <label>Reporting Officer</label>
+                                                    @if (Model.ReportingOfficerListModel != null)
+                                                    {
+                                                        <select asp-for="ReportingOfficerStaffNumber" asp-items="@(new SelectList(Model.ReportingOfficerListModel,"StaffNumber","Name"))" class="form-control" id="ReportingOfficer" onchange="clearreportingofficervalidation()" onclick="clearreportingofficervalidation()">
+                                                            <option value="-1">Please Select Reporting Officer</option>
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                        <select asp-for="ReportingOfficerStaffNumber" class="form-control" id="ReportingOfficer">
+                                                            <option value="-1">Please Select Reporting Officer</option>
+                                                        </select>
+                                                    }
+                                                    <span id="validatereportingofficer" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                    <label for="IndentRequiredDate" class="form-label">Required On</label>
+                                                    <input type="date" class="form-control" id="IndentRequiredDate" onclick="clearindentrequireddatevalidation()">
+                                                    <span id="validateindentrequireddate" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                    <label for="IndentRequiredTime" class="form-label">Time</label>
+                                                    <input type="time" class="form-control" id="IndentRequiredTime" onclick="clearindentrequiredtimevalidation()">
+                                                    <span id="validateindentrequiredtime" class="text-danger">@ViewBag.TimeError</span>
+                                                </div>
+                                                <div class="col-md-4 col-lg-4 col-sm-4 col-4  mb-3">
+                                                    <label for="VehicleFor" class="form-label">Vehicle For</label>
+                                                    <textarea class="form-control" asp-for="VehicleFor" id="VehicleFor" onkeypress="clearvehicleforvalidation()" onclick="clearvehicleforvalidation()"></textarea>
+                                                    <span id="validatevehiclefor" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                    <label for="Organization" class="form-label">To visit Organization/Firm</label>
+                                                    <input type="text" asp-for="Organization" class="form-control" id="Organization" onkeypress="clearorganizationvalidation()" onclick="clearorganizationvalidation()">
+                                                    <span id="validateorganization" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                    <label for="Distance" class="form-label">Approximate distance (in km)</label>
+                                                    <input type="number" asp-for="Distance" class="form-control" id="Distance" onkeypress="cleardistancevalidation()" onclick="cleardistancevalidation()">
+                                                    <span id="validatedistance" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                    <label for="DurationOfWork" class="form-label">Duration of Work in Hrs</label>
+                                                    <input type="number" asp-for="DurationOfWork" class="form-control" id="DurationOfWork" onkeypress="cleardurationofworkvalidation()" onclick="cleardurationofworkvalidation()">
+                                                    <span id="validatedurationofwork" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <h4 class="text-center">Name(s) of the person(s) using the vehicle</h4>
+                                            <span id="validateduplicateentry" class="text-danger my-2"></span>
+                                            @for (var employee = 0; employee < 10; employee++)
+                                            {
+                                                <div id="EmployeeDiv(@employee)">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4 mb-3">
+                                                            <label for="SearchInput(@employee)" class="form-label">Staff Name</label>
+                                                            <input type="text" class="form-control" id="SearchInput(@employee)" onchange="filtersearch(@employee)" onkeypress="filtersearch(@employee)" onclick="filtersearch(@employee)">
+                                                            <span class="text-info">Kindly enter the Staff Name and select person from the next select input</span>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                            <label for="EmployeeStaffNumber" class="form-label">Name of the person</label>
+                                                            @if(@Model.GroupEmployees != null)
+                                                            {
+                                                                <select asp-for="@Model.IndentInvolvedPersons[employee].StaffNumber" asp-items="@(new SelectList(@Model.Employees,"StaffNumber","AlternateName"))" class="form-control" id="EmployeeStaffNumber(@employee)" onchange="toggleSelectedEmployeeName(@employee)" onclick="clearemployeestaffnumbervalidation(@employee)">
+                                                                    <option value="-1">Please select employee</option>
+                                                                </select>
+                                                            }
+                                                            else
+                                                            {
+                                                                <select class="form-control" id="EmployeeStaffNumber(@employee)" onchange="clearemployeestaffnumbervalidation(@employee)" onclick="clearemployeestaffnumbervalidation(@employee)">
+                                                                    <option value="-1">Please select employee</option>
+                                                                </select>
+                                                            }
+                                                            <span id="validateemployeestaffnumber(@employee)" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-sm-4 col-4  mb-3">
+                                                            <label for="InternalPhoneNumber" class="form-label">Internal Phone Number</label>
+                                                            <input type="number" asp-for="@Model.IndentInvolvedPersons[employee].InternalPhoneNumber" class="form-control" id="InternalPhoneNumber(@employee)" onkeypress="clearinternalphonenumbervalidation(@employee)" onclick="clearinternalphonenumbervalidation(@employee)">
+                                                            <span id="validateinternalphonenumber(@employee)" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="col-1 mb-3">
+                                                            <label class="form-label"></label>
+                                                            <button class="btn btn-primary form-control mt-2 text-center add-button" id="addbutton(@employee)" type="button" onclick="employeeadd(@employee)">Add</button>
+                                                        </div>
+                                                        @if (employee != 0)
+                                                        {
+                                                            <div class="col-1 mb-3">
+                                                                <label class="form-label"></label>
+                                                                <button class="btn btn-primary form-control mt-2 text-center remove-button" id="removebutton(@employee)" type="button" onclick="employeeremove(@employee)">Remove</button>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="row m-1 border rounded-top mt-4 p-3">
+                                            <div class="col-md-4 col-lg-4 col-sm-4 col-4  mb-3">
+                                                <label for="Remarks" class="form-label">Remarks</label>
+                                                <textarea class="form-control" asp-for="NewRemarks" id="Remarks" onkeypress="clearremarksvalidation()" onclick="clearremarksvalidation()"></textarea>
+                                                <span id="validateremarks" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary px-5 mt-2 float-end" id="submitbutton" onclick="return validateForm()">Submit</button>
+                                    
+                                    <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("Index","User")">Go Back</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/user/raise-vehicle-indent.js"></script>

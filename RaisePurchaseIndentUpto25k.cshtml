@@ -1,0 +1,235 @@
+﻿
+@using Digitalization.Models.UserModel
+@model PurchaseIndentModelUpto25Model
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutWithNav.cshtml";
+}
+
+<link rel="stylesheet" href="~/assets/css/user/common-without-hover.css"/>
+
+
+<div class="mt-5 ms-5">
+    <div class="ms-5">
+        <div class="ms-5">
+            <div class="mx-5 mt-5 ms-5">
+                <br><br>
+                <div class="main ms-5 py-4 pb-0">
+                    <div class="bs-example ms-5">
+                        <nav aria-label="breadcrumb" class="pl-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","User")" style="text-decoration: none">User</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("PurchaseIndentUpto25k","User")" style="text-decoration: none">PurchaseIndentUpto25k</a></li>
+                             @*   <li class="breadcrumb-item active" aria-current="page">RaisePurchaseIndent</li>*@
+                            </ol>
+                        </nav>
+                        <h2 class="text-center">PurchaseIndentUpto25k</h2>
+                        <p class="text-center text-danger">@ViewBag.ExceptionError</p>
+                        <h4 class="text-center text-success">@ViewBag.SuccessMessage</h4>
+                        <span id="ErrorMessage" class="text-danger"></span>
+                        <hr>
+
+                        <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" asp-action="RaisePurchaseIndentUpto25k" class="m-4 pb-5" name="register-form">
+                            <div class="tab-content">
+                                <div class="" id="userdetails">
+                                    <div class="row m-1 border rounded-top p-2">
+                                        <h4 class="text-center my-3">Indentor Details</h4>
+                                        <div style="display: none">
+                                            <!--hidden field start-->
+                                             <div class="col-3 mb-3" >
+                                                <label for="CertificatePrefix" class="form-label">Certificate Prefix</label>
+                                                <input type="text" asp-for="CertifiedPrefix" class="form-control" id="CertificatePrefix" />
+                                            </div>
+                                             <div class="col-3 mb-3" >
+                                                <label for="AlternateInvoiceDate" class="form-label">AlternateInvoiceDate</label>
+                                                <input type="text" asp-for="MaterialInvoiceDate" class="form-control" id="AlternateInvoiceDate" />
+                                            </div>
+                                             <div class="col-3 mb-3" >
+                                                <label for="AlternateMaterialReceivedDateAtStock" class="form-label">AlternateMaterialReceivedDateAtStock</label>
+                                                <input type="text" asp-for="MaterialReceivedDate" class="form-control" id="AlternateMaterialReceivedDateAtStock" />
+                                            </div>
+                                             <div class="col-3 mb-3" >
+                                                <label for="AlternatePurchaseVoucherDate" class="form-label">AlternatePurchaseVoucherDate</label>
+                                                <input type="text" asp-for="PurchaseVoucherDate" class="form-control" id="AlternatePurchaseVoucherDate" />
+                                            </div>
+                                             <div class="col-3 mb-3" >
+                                                <label for="AlternatePurchaseInvoiceDate" class="form-label">AlternatePurchaseInvoiceDate</label>
+                                                <input type="text" asp-for="PurchaseVoucherInvoiceDate" class="form-control" id="AlternatePurchaseInvoiceDate" />
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="CenterID" class="form-label">CenterID</label>
+                                                <input type="text" asp-for="IndentorCenterID" class="form-control" id="CenterID" readonly />
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="GroupID" class="form-label">GroupID</label>
+                                                <input type="text" asp-for="IndentorGroupID" class="form-control" id="GroupID" readonly />
+                                            </div>
+                                            <!--hidden field end-->
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3 mb-3">
+                                                <label for="StaffNumber" class="form-label">Staff Number</label>
+                                                <input type="text" asp-for="IndentorStaffNumber" class="form-control" id="StaffNumber" readonly />
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="Name" class="form-label">Name</label>
+                                                <input type="text" asp-for="IndentorName" class="form-control" id="Name" readonly />
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="Designation" class="form-label">Designation</label>
+                                                <input type="text" asp-for="IndentorDesignation" class="form-control" id="Designation" readonly />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3 mb-3">
+                                                <label for="Center" class="form-label">Center</label>
+                                                <input type="text" asp-for="IndentorCenterName" class="form-control" id="Center" readonly />
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="Groups" class="form-label">Groups</label>
+                                                <input type="text" asp-for="IndentorGroupName" class="form-control" id="Groups" readonly />
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label>Reporting Officer</label>
+                                                    @if (Model.ReportingOfficerModel != null)
+                                                    {
+                                                        <select asp-for="ReportingOfficerStaffNumber" asp-items="@(new SelectList(Model.ReportingOfficerModel,"StaffNumber","Name"))" class="form-control" id="ReportingOfficer" onchange="clearreportingofficervalidation()" onclick="clearreportingofficervalidation()">
+                                                            <option value="-1">Please Select Reporting Officer</option>
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                        <select asp-for="ReportingOfficerStaffNumber" class="form-control" id="ReportingOfficer">
+                                                            <option value="-1">Please Select Reporting Officer</option>
+                                                        </select>
+                                                    }
+                                                    <span id="validatereportingofficer" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label>Project Leader</label>
+                                                    @if (Model.ProjectLeaderModel != null)
+                                                    {
+                                                    <select asp-for="ProjectLeaderStaffNumber" asp-items="@(new SelectList(Model.ProjectLeaderModel,"StaffNumber","Name"))" class="form-control" id="ProjectLeader" onchange="clearprojectleader()" onclick="clearprojectleader()">
+                                                            <option value="-1">Please Select Project Leader</option>
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                    <select asp-for="ProjectLeaderStaffNumber" class="form-control" id="ProjectLeader">
+                                                            <option value="-1">Please Select Project Leader</option>
+                                                        </select>
+                                                    }
+                                                    <span id="validateprojectleader" class="text-danger"></span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                                
+                                    <div class="row m-1 border rounded-top p-2 mt-3">
+                                        <h4 class="text-center my-3">Material Details</h4>
+                                        <div class="row">
+                                            <div class="col-4 mb-4">
+                                                <label for="MaterialRequired" class="form-label">Material/Service Required</label>
+                                                <textarea class="form-control" asp-for="MaterialRequired" id="MaterialRequired" onclick="clearvalidatematerialrequired()" onkeypress="clearvalidatematerialrequired()"></textarea>
+                                                <span id="validatematerialrequired" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-4">
+                                                <label for="Quantity" class="form-label">Material Quantity</label>
+                                                <input type="text" class="form-control" asp-for="MaterialQuantity" id="MaterialQuantity" onclick="clearvalidatematerialquantity()" onkeypress="clearvalidatematerialquantity()" />
+                                                <span id="validatematerialquantity" class="text-danger"></span>
+                                            </div>
+                                            <div class=" col-3 mb-3">
+                                                <label for="MaterialAttachment" class="form-label">Material Attachment File</label>
+                                                <input class="form-control" type="file" id="MaterialAttachment" name="MaterialAttachment" onclick="clearvalidatematerialattachment()" onkeypress="clearvalidatematerialattachment()">
+                                                <span class="text-info">Attachment size must be less than 20 MB</span>
+                                                <span id="validatematerialattachment" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-1 border rounded-top p-2 mt-3">
+                                        <h4 class="text-center">Project & Amount details</h4>
+                                        <div class="row">
+                                            <div class="col-3 mb-3">
+                                                <label for="ProjectNo" class="form-label">Project Number</label>
+                                                <input type="text" class="form-control" asp-for="ProjectNumber" id="ProjectNo" onclick="clearvalidateprojectno()" onkeypress="clearvalidateprojectno()" />
+                                                <span id="validateprojectno" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="ProjectType" class="form-label">Project Type</label>
+                                                <select class="form-control" asp-for="ProjectType" id="ProjectType" onclick="clearvalidateprojecttype()" onkeypress="clearvalidateprojecttype()">
+                                                    <option value="Null">Please select any one</option>
+                                                    <option value="LSP">LSP</option>
+                                                    <option value="General">General</option>
+                                                    <option value="Others">Others</option>
+                                                </select>
+                                                <span id="validateprojecttype" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="BudgetHead" class="form-label">Budget Head</label>
+                                                <input type="text" class="form-control" asp-for="BudgetHead" id="BudgetHead" onclick="clearvalidatebudgethead()" onkeypress="clearvalidatebudgethead()"/>
+                                                <span id="validatebudgethead" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-3 mb-3">
+                                                <label for="EstimatedCost" class="form-label">Estimated Cost</label>
+                                                <input type="text" class="form-control" asp-for="EstimatedCost" id="EstimatedCost" onclick="clearvalidateestimatedcost()" onkeypress="clearvalidateestimatedcost()"/>
+                                                <span  id="validateestimatedcost" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row m-1 border rounded-top p-2 mt-3">
+                                        <h4 class="text-center">Purchase details</h4>
+                                        <div class="row">
+                                            <div class="col-3 mb-3">
+                                                <label for="SupplyforIndentingDepartment" class="form-label">Processed by Purchase/Indenting Department</label>
+                                                <select class="form-control" asp-for="ProcessingDepartment" id="SupplyforIndentingDepartment" onclick="clearvalidatesupplyforindentingdept()" onkeypress="clearvalidatesupplyforindentingdept()">
+                                                    <option value="Null">Please select any one</option>
+                                                    <option value="PURCHASEDEPT">Purchase Department</option>
+                                                    <option value="INDENTINGDEPT">Indenting Department</option>
+                                                </select>
+                                                <span id="validatesupplyforindentingdept" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-5 mb-3">
+                                                <label for="SupplyforIndentingOfficer" class="form-label">Possible Source of supply known to the Indenting Officer</label>
+                                                <textarea class="form-control" asp-for="PossibleSource" id="SupplyforIndentingOfficer" onclick="clearvalidatesupplyforindentingofficer()" onkeypress="clearvalidatesupplyforindentingofficer()"></textarea>
+                                                <span id="validatesupplyforindentingofficer" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+@*
+                                    <div class="row m-1 border rounded-top p-2 mt-3">
+                                        <span><h5 class="text-dark">For Contigent bill click here.</h5>
+                                            <a href="@Url.Action("RaiseContigentBill","User")"><h5 class="btn btn-primary">Contigent Bill</h5></a>
+                                        </span>
+
+
+                                    </div>*@
+                                    
+                                   @* <div class="mb-3 ml-3 mt-2">
+                                        <label class="form-label">It is certified that the required item/s is/are will be utilized for the project/Department</label>
+                                        <input class="" type="text" asp-for="UtilizingDepartment" id="UtilizedDepartment" onclick="clearutilizeddepartmentvalidation()" onkeypress="clearutilizeddepartmentvalidation()" />
+                                        <span class="text-info">Only if applicable.</span>
+                                        <span id="validateutilizingdepartment" class="text-danger"></span>
+                                    </div>*@
+                                    <div class="mb-3 ml-3 mt-2">
+                                        <label class="form-label">It is certified that the required item/s is/are will be utilized for the project/Department</label>
+                                        <input class="" type="text" asp-for="UtilizingDepartment" id="UtilizedDepartment"/>
+                                        <span class="text-info">Only if applicable.</span>                                      
+                                    </div>
+                                    <a class="btn btn-primary px-5 mt-2 ml-4" href="@Url.Action("PurchaseIndentUpto25k","User")">Go Back</a>
+                                    <button type="submit" class="btn btn-primary float-end px-5 mt-2 mr-2">Submit</button>
+
+                                    <!-- within this block -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/assets/js/user/raise-purchase-indent-below-25k.js"></script>
